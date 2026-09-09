@@ -1,11 +1,41 @@
-// 1. Инициализация Telegram WebApp API
+// ==========================================
+// 1. Ініціалізація Telegram WebApp API
+// ==========================================
 const tg = window.Telegram?.WebApp;
+
 if (tg) {
   tg.ready();
-  tg.expand(); // Разворачиваем окно на максимум
+  tg.expand(); // Відкриваємо застосунок на весь екран
+
+  // Налаштування нативної нижньої кнопки Telegram
+  if (tg.MainButton) {
+    tg.MainButton.setText("💬 Керування ботом та сповіщеннями");
+    tg.MainButton.show();
+    tg.MainButton.onClick(() => {
+      hapticFeedback('medium');
+      tg.close(); // Плавно згортає WebApp і повертає юзера в чат з ботом
+    });
+  }
 }
 
-// 2. База расписания (0 - Понедельник ... 5 - Суббота)
+// Функція виходу в чат для кастомних кнопок та віджетів
+function closeToChat() {
+  hapticFeedback('light');
+  if (tg) tg.close();
+}
+
+// ==========================================
+// 2. Тактильний відгук (Taptic Engine)
+// ==========================================
+function hapticFeedback(style = 'light') {
+  if (tg?.HapticFeedback) {
+    tg.HapticFeedback.impactOccurred(style);
+  }
+}
+
+// ==========================================
+// 3. База даних розкладу (0 - Пн ... 5 - Сб)
+// ==========================================
 const SCHEDULE_DATA = {
   0: [
     { start: "11:40", end: "13:00", name: "Комп'ютерна схемотехніка і електроніка", teacher: "Габузян Г.В." },
@@ -44,47 +74,41 @@ const SCHEDULE_DATA = {
   ]
 };
 
-// 3. Apple Taptic Engine (вибрация при кликах)
-function hapticFeedback(style = 'light') {
-  if (tg?.HapticFeedback) {
-    tg.HapticFeedback.impactOccurred(style);
-  }
-}
-
-// 4. Переключение Тем (Dark / Light)
+// ==========================================
+// 4. Перемикання Тем (Dark / Light)
+// ==========================================
 function toggleTheme() {
   hapticFeedback('medium');
   const root = document.documentElement;
   const isDark = root.getAttribute("data-theme") === "dark";
   const newTheme = isDark ? "light" : "dark";
-  
+
   root.setAttribute("data-theme", newTheme);
-  document.getElementById("themeBtn").innerText = isDark ? "☀️" : "🌙";
+  const themeBtn = document.getElementById("themeBtn");
+  if (themeBtn) {
+    themeBtn.innerText = isDark ? "☀️" : "🌙";
+  }
 }
 
-// 5. Отрисовка списка пар по выбранному дню
+// ==========================================
+// 5. Відображення розкладу для обраного дня
+// ==========================================
 function selectDay(dayIndex) {
   hapticFeedback('light');
-  
-  // Переключение активного таба
+
   const chips = document.querySelectorAll(".day-chip");
   chips.forEach((c, idx) => c.classList.toggle("active", idx === dayIndex));
 
   const container = document.getElementById("scheduleListContainer");
+  if (!container) return;
+
   const pairs = SCHEDULE_DATA[dayIndex] || [];
-  
+
   if (pairs.length === 0) {
     container.innerHTML = '<div style="text-align:center; padding: 25px; color: var(--text-sub);">🎉 Вихідний день! Пар немає.</div>';
     return;
   }
 
-function closeToChat() {
-  hapticFeedback('medium');
-  if (tg) {
-    tg.close(); // Плавно закрывает WebApp и оставляет пользователя в диалоге с ботом
-  }
-}
-  
   let html = "";
   pairs.forEach((pair, i) => {
     html += `
@@ -97,7 +121,7 @@ function closeToChat() {
       </div>
     `;
 
-    // Расчет длины перемены между парами
+    // Розрахунок тривалості перерви між парами
     if (i < pairs.length - 1) {
       const [h1, m1] = pair.end.split(":").map(Number);
       const [h2, m2] = pairs[i + 1].start.split(":").map(Number);
@@ -109,18 +133,23 @@ function closeToChat() {
   container.innerHTML = html;
 }
 
-// 6. Динамический таймер: определение текущей пары и прогресса
+// ==========================================
+// 6. Реальний час: таймер та статус поточної пари
+// ==========================================
 function updateLiveWidget() {
   const now = new Date();
   const currentMinutes = now.getHours() * 60 + now.getMinutes();
   const todayDay = now.getDay();
-  const todayIndex = todayDay === 0 ? 6 : todayDay - 1; // 0: Пн ... 6: Вс
-  
+  // 0 - Неділя, 1 - Пн ... 6 - Сб -> перетворюємо на індекс масиву (0 - Пн ... 5 - Сб)
+  const todayIndex = todayDay === 0 ? 6 : todayDay - 1;
+
   const pairs = SCHEDULE_DATA[todayIndex] || [];
   const statusEl = document.getElementById("liveStatus");
   const nameEl = document.getElementById("livePairName");
   const metaEl = document.getElementById("livePairMeta");
   const progressEl = document.getElementById("pairProgress");
+
+  if (!statusEl || !nameEl || !metaEl || !progressEl) return;
 
   if (pairs.length === 0) {
     statusEl.innerText = "Сьогодні вихідний";
@@ -130,7 +159,6 @@ function updateLiveWidget() {
     return;
   }
 
-  // Проверяем каждую пару
   for (let i = 0; i < pairs.length; i++) {
     const pair = pairs[i];
     const [hStart, mStart] = pair.start.split(":").map(Number);
@@ -138,18 +166,18 @@ function updateLiveWidget() {
     const startMins = hStart * 60 + mStart;
     const endMins = hEnd * 60 + mEnd;
 
-    // Пара идет прямо сейчас
+    // Пара йде зараз
     if (currentMinutes >= startMins && currentMinutes < endMins) {
       statusEl.innerText = "Зараз іде пара";
       nameEl.innerText = pair.name;
       metaEl.innerText = `${pair.start} – ${pair.end} • ${pair.teacher || 'Викладач не вказаний'}`;
-      
+
       const percent = ((currentMinutes - startMins) / (endMins - startMins)) * 100;
       progressEl.style.width = `${Math.round(percent)}%`;
       return;
     }
 
-    // Скоро начнется следующая пара
+    // Очікування наступної пари
     if (currentMinutes < startMins) {
       statusEl.innerText = "Наступна пара";
       nameEl.innerText = pair.name;
@@ -160,20 +188,22 @@ function updateLiveWidget() {
     }
   }
 
-  // Если все пары на сегодня закончились
+  // Пари на сьогодні завершилися
   statusEl.innerText = "Навчальний день завершено";
   nameEl.innerText = "Всі пари закінчилися";
   metaEl.innerText = "Час для власних справ";
   progressEl.style.width = "100%";
 }
 
-// 7. Точка старта при загрузке страницы
+// ==========================================
+// 7. Точка входу
+// ==========================================
 document.addEventListener("DOMContentLoaded", () => {
   const today = new Date().getDay();
-  const dayIndex = today === 0 ? 0 : today - 1; // если воскресенье — покажем понедельник
+  const dayIndex = today === 0 ? 0 : today - 1; // Якщо неділя — відкриваємо понеділок
   selectDay(Math.min(dayIndex, 5));
-  
+
   updateLiveWidget();
-  // Пересчитываем статус каждые 30 секунд
+  // Оновлюємо статус і прогрес-бар кожні 30 секунд
   setInterval(updateLiveWidget, 30000);
 });
