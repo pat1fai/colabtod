@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Розклад пар</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root {
+      --bg: #000000;
+      --card-bg: rgba(28, 28, 30, 0.75);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --accent: #0A84FF;
+      --text-main: #FFFFFF;
+      --text-sub: #8E8E93;
+      --green: #30D158;
+      --orange: #FF9F0A;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      padding: 16px;
+      padding-bottom: 40px;
+    }
+
+    /* Заголовок в стиле iOS Large Title */
+    .header {
+      margin-bottom: 20px;
+      padding-top: 10px;
+    }
+    .header-sub {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+      color: var(--text-sub);
+    }
+    .header-title {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    /* Виджет в стиле Apple Card */
+    .ios-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 18px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+    }
+
+    /* Баннер текущей пары */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--green);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--green);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--green);
+    }
+    .current-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .current-time {
+      font-size: 14px;
+      color: var(--text-sub);
+    }
+
+    /* Секции расписания */
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      margin-left: 4px;
+    }
+
+    .pair-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);
+    }
+    .pair-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    .pair-row:first-child {
+      padding-top: 0;
+    }
+
+    .pair-time {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      min-width: 85px;
+    }
+    .pair-info {
+      flex: 1;
+      padding-left: 10px;
+    }
+    .pair-name {
+      font-size: 15px;
+      font-weight: 500;
+    }
+    .pair-teacher {
+      font-size: 12px;
+      color: var(--text-sub);
+      margin-top: 2px;
+    }
+
+    /* Индикатор перемены */
+    .break-badge {
+      background: rgba(255, 159, 10, 0.12);
+      border: 1px solid rgba(255, 159, 10, 0.25);
+      border-radius: 10px;
+      padding: 6px 12px;
+      font-size: 12px;
+      color: var(--orange);
+      font-weight: 600;
+      text-align: center;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="header-sub" id="currentDate">ПОНЕДІЛОК</div>
+    <div class="header-title">Розклад пар</div>
+  </div>
+
+  <!-- Виджет фокуса в реальном времени -->
+  <div class="ios-card">
+    <div class="status-badge">
+      <div class="status-dot"></div>
+      Наступне заняття
+    </div>
+    <div class="current-title" id="nextSubject">Програмна інженерія</div>
+    <div class="current-time" id="nextTime">13:10 – 14:30 • Перерва 10 хв</div>
+  </div>
+
+  <div class="section-title">Сьогоднішні пари</div>
+
+  <!-- Список пар -->
+  <div class="ios-card">
+    <div class="pair-row">
+      <div class="pair-time">11:40 - 13:00</div>
+      <div class="pair-info">
+        <div class="pair-name">Комп'ютерна схемотехніка</div>
+        <div class="pair-teacher">Габузян Г.В.</div>
+      </div>
+    </div>
+
+    <div class="break-badge">⏳ Перерва: 10 хвилин</div>
+
+    <div class="pair-row">
+      <div class="pair-time">13:10 - 14:30</div>
+      <div class="pair-info">
+        <div class="pair-name">Програмна інженерія</div>
+        <div class="pair-teacher">Мілашенко А.М.</div>
+      </div>
+    </div>
+
+    <div class="break-badge">⏳ Перерва: 20 хвилин</div>
+
+    <div class="pair-row">
+      <div class="pair-time">14:50 - 16:10</div>
+      <div class="pair-info">
+        <div class="pair-name">Комп'ютерна схемотехніка</div>
+        <div class="pair-teacher">Габузян Г.В.</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Интеграция с Telegram SDK
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+    tg.expand(); // Открывает веб-приложение сразу на весь экран
+
+    // Подставляем день недели
+    const days = ["НЕДІЛЯ", "ПОНЕДІЛОК", "ВІВТОРОК", "СЕРЕДА", "ЧЕТВЕР", "П'ЯТНИЦЯ", "СУБОТА"];
+    const now = new Date();
+    document.getElementById("currentDate").innerText = days[now.getDay()];
+  </script>
+</body>
+</html>
