@@ -78,6 +78,13 @@ function selectDay(dayIndex) {
     return;
   }
 
+function closeToChat() {
+  hapticFeedback('medium');
+  if (tg) {
+    tg.close(); // Плавно закрывает WebApp и оставляет пользователя в диалоге с ботом
+  }
+}
+  
   let html = "";
   pairs.forEach((pair, i) => {
     html += `
