@@ -1,0 +1,4 @@
+echo ".idea/" >> .gitignore
+echo "venv/" >> .gitignore
+echo "__pycache__/" >> .gitignore
+echo "*.db" >> .gitignore
