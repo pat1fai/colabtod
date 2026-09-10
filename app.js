@@ -38,7 +38,7 @@ function hapticFeedback(style = 'light') {
 // ==========================================
 const SCHEDULE_DATA = {
   {
-  0: [
+   "0": [
     {
       "start": "10:40",
       "end": "12:00",
