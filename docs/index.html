@@ -8,28 +8,37 @@
   <style>
     :root {
       --bg: #F2F2F7;
-      --card-bg: rgba(255, 255, 255, 0.82);
+      --bg-secondary: #FFFFFF;
+      --card-bg: rgba(255, 255, 255, 0.84);
+      --card-solid: #FFFFFF;
       --card-border: rgba(0, 0, 0, 0.06);
       --text-primary: #000000;
       --text-secondary: #8E8E93;
+      --text-tertiary: #C7C7CC;
       --accent-blue: #007AFF;
       --accent-green: #34C759;
       --accent-orange: #FF9500;
       --accent-purple: #AF52DE;
+      --accent-red: #FF3B30;
       --segmented-bg: rgba(118, 118, 128, 0.14);
       --blur: blur(28px);
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.07);
       --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", sans-serif;
     }
 
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #000000;
-        --card-bg: rgba(28, 28, 30, 0.85);
-        --card-border: rgba(255, 255, 255, 0.09);
-        --text-primary: #FFFFFF;
-        --text-secondary: #98989D;
-        --segmented-bg: rgba(118, 118, 128, 0.28);
-      }
+    [data-theme="dark"] {
+      --bg: #000000;
+      --bg-secondary: #1C1C1E;
+      --card-bg: rgba(28, 28, 30, 0.86);
+      --card-solid: #1C1C1E;
+      --card-border: rgba(255, 255, 255, 0.09);
+      --text-primary: #FFFFFF;
+      --text-secondary: #98989D;
+      --text-tertiary: #48484A;
+      --segmented-bg: rgba(118, 118, 128, 0.28);
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 6px 24px rgba(0, 0, 0, 0.45);
     }
 
     * {
@@ -44,36 +53,193 @@
       background-color: var(--bg);
       color: var(--text-primary);
       padding: 16px;
-      padding-top: calc(env(safe-area-inset-top, 16px) + 12px);
-      padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 36px);
+      padding-top: calc(env(safe-area-inset-top, 16px) + 10px);
+      padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 40px);
       min-height: 100vh;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), color 0.3s ease;
     }
 
-    /* Apple Header */
-    .header-section {
-      margin-bottom: 18px;
+    /* Top Bar with Apple Theme Switcher */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
     }
     .college-tag {
-      display: inline-block;
-      font-size: 11px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.6px;
+      letter-spacing: 0.5px;
       color: var(--accent-blue);
+      background: rgba(0, 122, 255, 0.1);
+      padding: 5px 10px;
+      border-radius: 14px;
+    }
+    
+    /* Theme Toggle Capsule */
+    .theme-capsule {
+      display: flex;
+      background: var(--segmented-bg);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border-radius: 20px;
+      padding: 3px;
+      gap: 2px;
+      border: 1px solid var(--card-border);
+    }
+    .theme-btn {
+      border: none;
+      background: transparent;
+      padding: 4px 9px;
+      font-size: 13px;
+      border-radius: 16px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: all 0.2s ease;
+    }
+    .theme-btn.active {
+      background: var(--card-solid);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Apple Main Header */
+    .group-title {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.8px;
+      line-height: 1.1;
       margin-bottom: 4px;
     }
-    .group-title {
-      font-size: 28px;
-      font-weight: 800;
-      letter-spacing: -0.6px;
-      line-height: 1.15;
-    }
     .date-subtitle {
-      font-size: 13px;
+      font-size: 14px;
       color: var(--text-secondary);
       font-weight: 500;
-      margin-top: 4px;
+      margin-bottom: 16px;
+    }
+
+    /* iOS Interactive Summary Widget (Live / Widget Card) */
+    .summary-widget {
+      background: var(--card-bg);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border: 1px solid var(--card-border);
+      border-radius: 22px;
+      padding: 16px 18px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+    }
+    .widget-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .widget-stat-group {
+      display: flex;
+      gap: 20px;
+    }
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .stat-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: var(--text-secondary);
+    }
+    .stat-value {
+      font-size: 18px;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+    .live-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(52, 199, 89, 0.15);
+      color: var(--accent-green);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 20px;
+    }
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      animation: pulse 1.6s infinite ease-in-out;
+    }
+    @keyframes pulse {
+      0% { transform: scale(0.85); opacity: 0.7; }
+      50% { transform: scale(1.4); opacity: 1; }
+      100% { transform: scale(0.85); opacity: 0.7; }
+    }
+
+    /* Live Countdown Banner in Widget */
+    .countdown-banner {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+    }
+    .countdown-timer {
+      font-variant-numeric: tabular-nums;
+      font-weight: 700;
+      color: var(--accent-blue);
+      font-size: 15px;
+    }
+
+    /* Apple Spotlight Search Bar */
+    .search-wrapper {
+      position: relative;
+      margin-bottom: 16px;
+    }
+    .search-input {
+      width: 100%;
+      padding: 10px 14px 10px 38px;
+      background: var(--segmented-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      font-size: 15px;
+      color: var(--text-primary);
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    .search-input:focus {
+      background: var(--card-solid);
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+    }
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+      color: var(--text-secondary);
+      pointer-events: none;
+    }
+    .clear-search {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: none;
     }
 
     /* iOS Segmented Control */
@@ -90,10 +256,10 @@
     .segmented-control {
       display: flex;
       background: var(--segmented-bg);
-      border-radius: 12px;
+      border-radius: 13px;
       padding: 3px;
-      gap: 2px;
-      min-width: 390px;
+      gap: 3px;
+      min-width: 420px;
       backdrop-filter: var(--blur);
       -webkit-backdrop-filter: var(--blur);
       box-shadow: inset 0 0 1px rgba(0,0,0,0.08);
@@ -106,19 +272,19 @@
       border: none;
       background: transparent;
       color: var(--text-primary);
-      border-radius: 9px;
+      border-radius: 10px;
       cursor: pointer;
       white-space: nowrap;
       text-align: center;
-      transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+      transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
     .segmented-btn.active {
-      background: var(--card-bg);
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+      background: var(--card-solid);
+      box-shadow: var(--shadow-sm);
       color: var(--text-primary);
     }
 
-    /* Apple Glass Cards */
+    /* Interactive Apple Cards */
     .apple-card {
       background: var(--card-bg);
       backdrop-filter: var(--blur);
@@ -127,45 +293,24 @@
       border-radius: 20px;
       padding: 18px;
       margin-bottom: 14px;
-      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+      box-shadow: var(--shadow-sm);
       position: relative;
-      transition: transform 0.15s ease, border-color 0.2s ease;
+      cursor: pointer;
+      transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    .apple-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
     }
     .apple-card:active {
-      transform: scale(0.992);
+      transform: scale(0.985);
     }
     .apple-card.live-card {
-      border: 1.5px solid rgba(52, 199, 89, 0.6);
-      box-shadow: 0 8px 30px rgba(52, 199, 89, 0.15);
+      border: 1.5px solid rgba(52, 199, 89, 0.65);
+      box-shadow: 0 8px 32px rgba(52, 199, 89, 0.18);
     }
     .apple-card.past-card {
-      opacity: 0.65;
-    }
-
-    /* Badges */
-    .live-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(52, 199, 89, 0.16);
-      color: var(--accent-green);
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.2px;
-      padding: 4px 10px;
-      border-radius: 20px;
-    }
-    .pulse-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--accent-green);
-      animation: pulse 1.6s infinite ease-in-out;
-    }
-    @keyframes pulse {
-      0% { transform: scale(0.85); opacity: 0.7; }
-      50% { transform: scale(1.35); opacity: 1; }
-      100% { transform: scale(0.85); opacity: 0.7; }
+      opacity: 0.6;
     }
 
     .pair-header {
@@ -181,9 +326,13 @@
       letter-spacing: -0.2px;
     }
     .pair-tag {
-      font-size: 12px;
+      font-size: 11px;
       color: var(--text-secondary);
-      font-weight: 600;
+      font-weight: 700;
+      background: rgba(118, 118, 128, 0.12);
+      padding: 3px 8px;
+      border-radius: 8px;
+      text-transform: uppercase;
     }
     .pair-title {
       font-size: 18px;
@@ -195,7 +344,7 @@
     .pair-details {
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 6px;
       font-size: 13.5px;
       color: var(--text-secondary);
     }
@@ -211,8 +360,22 @@
       width: 22px;
       height: 22px;
       background: rgba(118, 118, 128, 0.12);
-      border-radius: 6px;
+      border-radius: 7px;
       font-size: 12px;
+    }
+
+    /* Has Memo Badge */
+    .memo-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent-orange);
+      background: rgba(255, 149, 0, 0.14);
+      padding: 3px 8px;
+      border-radius: 8px;
+      margin-top: 8px;
     }
 
     /* Live Progress Bar */
@@ -242,7 +405,147 @@
       margin-top: 6px;
     }
 
-    /* Day Title Section for Week Views */
+    /* Apple Modal Bottom Sheet */
+    .sheet-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .sheet-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .bottom-sheet {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--card-solid);
+      border-top: 1px solid var(--card-border);
+      border-radius: 28px 28px 0 0;
+      padding: 20px 20px calc(env(safe-area-inset-bottom, 20px) + 24px) 20px;
+      z-index: 1000;
+      transform: translateY(100%);
+      transition: transform 0.35s cubic-bezier(0.18, 0.89, 0.32, 1);
+      box-shadow: 0 -10px 40px rgba(0,0,0,0.25);
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+    .bottom-sheet.active {
+      transform: translateY(0);
+    }
+    .sheet-handle {
+      width: 38px;
+      height: 5px;
+      background: var(--text-tertiary);
+      border-radius: 4px;
+      margin: 0 auto 16px auto;
+    }
+    .sheet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+    .sheet-title {
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+    .sheet-close-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--segmented-bg);
+      border: none;
+      color: var(--text-secondary);
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .sheet-memo-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-secondary);
+      margin: 18px 0 8px 0;
+    }
+    .sheet-textarea {
+      width: 100%;
+      height: 85px;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid var(--card-border);
+      background: var(--bg);
+      color: var(--text-primary);
+      font-size: 14px;
+      resize: none;
+      outline: none;
+    }
+    .sheet-textarea:focus {
+      border-color: var(--accent-blue);
+    }
+    .sheet-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .sheet-btn {
+      flex: 1;
+      padding: 12px 0;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.15s ease;
+    }
+    .sheet-btn:active {
+      transform: scale(0.98);
+    }
+    .sheet-btn-primary {
+      background: var(--accent-blue);
+      color: #FFFFFF;
+    }
+    .sheet-btn-secondary {
+      background: var(--segmented-bg);
+      color: var(--text-primary);
+    }
+
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      top: calc(env(safe-area-inset-top, 16px) + 20px);
+      left: 50%;
+      transform: translateX(-50%) translateY(-60px);
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: var(--blur);
+      color: #FFFFFF;
+      padding: 10px 18px;
+      border-radius: 24px;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+      z-index: 1001;
+      transition: transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1), opacity 0.3s ease;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .toast.active {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Day section title */
     .day-section-title {
       font-size: 19px;
       font-weight: 800;
@@ -251,6 +554,18 @@
       display: flex;
       align-items: center;
       gap: 8px;
+    }
+
+    /* Bells table */
+    .bell-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .bell-item:last-child {
+      border-bottom: none;
     }
 
     /* Empty state */
@@ -271,27 +586,58 @@
       color: var(--text-secondary);
       margin-top: 4px;
     }
-
-    /* Bells table */
-    .bell-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 13px 0;
-      border-bottom: 1px solid var(--card-border);
-    }
-    .bell-item:last-child {
-      border-bottom: none;
-    }
   </style>
 </head>
 <body>
-  <div class="header-section">
-    <div class="college-tag">ВСП ФК КрНУ</div>
-    <div class="group-title">КМ 24-9-1</div>
-    <div class="date-subtitle" id="subtitle">Завантаження...</div>
+  <div class="toast" id="toast">Повідомлення скопійовано</div>
+
+  <!-- Верхня панель з тегами та перемикачем теми Apple -->
+  <div class="top-bar">
+    <div class="college-tag">
+      <span>🏛️</span> ВСП ФК КрНУ
+    </div>
+    <div class="theme-capsule">
+      <button class="theme-btn" id="theme-light" onclick="setTheme('light')">☀️</button>
+      <button class="theme-btn" id="theme-auto" onclick="setTheme('auto')">Auto</button>
+      <button class="theme-btn" id="theme-dark" onclick="setTheme('dark')">🌙</button>
+    </div>
   </div>
 
+  <!-- Заголовок -->
+  <div class="group-title">КМ 24-9-1</div>
+  <div class="date-subtitle" id="subtitle">Завантаження...</div>
+
+  <!-- Інтерактивний віджет зведення (Apple Widget) -->
+  <div class="summary-widget">
+    <div class="widget-row">
+      <div class="widget-stat-group">
+        <div class="stat-item">
+          <span class="stat-label">Сьогодні пар</span>
+          <span class="stat-value" id="today-pairs-count">0</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Тиждень</span>
+          <span class="stat-value" id="current-week-stat">1 тижд.</span>
+        </div>
+      </div>
+      <div id="live-status-pill">
+        <span class="live-indicator"><span class="pulse-dot"></span>Йде пара</span>
+      </div>
+    </div>
+    <div class="countdown-banner" id="countdown-banner">
+      <span id="countdown-label">До кінця пари:</span>
+      <span class="countdown-timer" id="countdown-timer">00:00</span>
+    </div>
+  </div>
+
+  <!-- Пошуковий рядок (Spotlight) -->
+  <div class="search-wrapper">
+    <span class="search-icon">🔍</span>
+    <input type="text" class="search-input" id="search-input" placeholder="Пошук предмету або викладача..." oninput="handleSearch()" />
+    <span class="clear-search" id="clear-search" onclick="clearSearch()">✕</span>
+  </div>
+
+  <!-- Apple iOS Segmented Control -->
   <div class="segmented-scroll">
     <div class="segmented-control">
       <button class="segmented-btn active" onclick="switchTab('today', this)">Сьогодні</button>
@@ -302,7 +648,44 @@
     </div>
   </div>
 
+  <!-- Контейнер для списку занять -->
   <div id="container"></div>
+
+  <!-- Apple iOS Bottom Sheet (Модальне вікно для нотаток і деталей пари) -->
+  <div class="sheet-overlay" id="sheet-overlay" onclick="closeSheet()"></div>
+  <div class="bottom-sheet" id="bottom-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <div>
+        <div class="pair-tag" id="sheet-pair-tag" style="margin-bottom: 6px;">1 пара</div>
+        <div class="sheet-title" id="sheet-title">Назва предмету</div>
+      </div>
+      <button class="sheet-close-btn" onclick="closeSheet()">✕</button>
+    </div>
+
+    <div class="pair-details" style="font-size: 14px; margin-bottom: 14px;">
+      <div class="detail-item">
+        <span class="icon-symbol">⏰</span>
+        <span id="sheet-time" style="font-weight: 600; color: var(--accent-blue);">08:30 – 10:00</span>
+      </div>
+      <div class="detail-item">
+        <span class="icon-symbol">🚪</span>
+        <span id="sheet-room">Аудиторія 301</span>
+      </div>
+      <div class="detail-item">
+        <span class="icon-symbol">👨‍🏫</span>
+        <span id="sheet-teacher">Викладач</span>
+      </div>
+    </div>
+
+    <div class="sheet-memo-title">📝 Мої нотатки та завдання (зберігаються в пам'яті)</div>
+    <textarea class="sheet-textarea" id="sheet-memo" placeholder="Наприклад: здати лабу 2, повторити конспект, контрольна робота..."></textarea>
+
+    <div class="sheet-actions">
+      <button class="sheet-btn sheet-btn-secondary" onclick="copyPairInfo()">📋 Скопіювати</button>
+      <button class="sheet-btn sheet-btn-primary" onclick="saveMemo()">💾 Зберегти нотатку</button>
+    </div>
+  </div>
 
   <script>
     // --- ДАНІ РОЗКЛАДУ ГРУПИ КМ 24-9-1 ---
@@ -318,7 +701,6 @@
       "Четвер", "П'ятниця", "Субота", "Неділя"
     ];
 
-    // week: null (щотижня), 1 (чисельник), 2 (знаменник)
     const SCHEDULE = {
       0: [ // Понеділок
         { pair: 1, name: "Комп'ютерна схемотехніка і електроніка", teacher: "Габузян Г.В.", room: "Ауд. 301", type: "Лекція/Практика", week: null },
@@ -360,7 +742,7 @@
       6: [] // Неділя
     };
 
-    // --- ІНІЦІАЛІЗАЦІЯ TELEGRAM WEBAPP ---
+    // --- TELEGRAM WEBAPP & HAPTIC FEEDBACK ---
     const tg = window.Telegram?.WebApp;
     if (tg) {
       tg.expand();
@@ -373,7 +755,33 @@
       }
     }
 
-    // Розрахунок номера календарного тижня
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.innerText = msg;
+      t.classList.add('active');
+      setTimeout(() => t.classList.remove('active'), 2200);
+    }
+
+    // --- ТЕМИ ОФОРМЛЕННЯ (APPLE THEMES) ---
+    function setTheme(mode) {
+      haptic('selection');
+      localStorage.setItem('km_theme', mode);
+      document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+      const activeBtn = document.getElementById(`theme-${mode}`);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      if (mode === 'auto') {
+        const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+      } else {
+        document.documentElement.setAttribute('data-theme', mode);
+      }
+    }
+
+    const savedTheme = localStorage.getItem('km_theme') || 'auto';
+    setTheme(savedTheme);
+
+    // --- ДОПОМІЖНІ ФУНКЦІЇ ЧАСУ ---
     function getWeekNumber(d) {
       d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
       d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
@@ -381,7 +789,6 @@
       return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
     }
 
-    // 1 - чисельник, 2 - знаменник
     function getWeekType(date = new Date()) {
       const weekNum = getWeekNumber(date);
       return (weekNum % 2 !== 0) ? 1 : 2;
@@ -393,19 +800,38 @@
     }
 
     let currentTab = 'today';
+    let searchQuery = '';
+    let selectedPairForModal = null;
 
     function switchTab(tab, btn) {
       document.querySelectorAll('.segmented-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       currentTab = tab;
-      haptic();
+      haptic('light');
       render();
     }
 
+    function handleSearch() {
+      searchQuery = document.getElementById('search-input').value.trim().toLowerCase();
+      document.getElementById('clear-search').style.display = searchQuery ? 'block' : 'none';
+      render();
+    }
+
+    function clearSearch() {
+      document.getElementById('search-input').value = '';
+      searchQuery = '';
+      document.getElementById('clear-search').style.display = 'none';
+      render();
+    }
+
+    // --- ГОЛОВНА ФУНКЦІЯ ВІДОБРАЖЕННЯ ---
     function render() {
       const now = new Date();
       const currentWeek = getWeekType(now);
       const weekLabel = currentWeek === 1 ? 'Чисельник (1 тиждень)' : 'Знаменник (2 тиждень)';
+
+      // Оновлення віджета
+      updateSummaryWidget(now, currentWeek);
 
       if (currentTab === 'today') {
         renderDay(0, currentWeek, 'Сьогодні', weekLabel);
@@ -424,17 +850,69 @@
       }
     }
 
+    function updateSummaryWidget(now, currentWeek) {
+      document.getElementById('current-week-stat').innerText = `${currentWeek} тижд. (${currentWeek === 1 ? 'Чис.' : 'Знам.'})`;
+
+      const dayIdx = (now.getDay() + 6) % 7;
+      const todayPairs = (SCHEDULE[dayIdx] || []).filter(p => p.week === null || p.week === currentWeek);
+      document.getElementById('today-pairs-count').innerText = todayPairs.length;
+
+      const nowMin = now.getHours() * 60 + now.minute || (now.getHours() * 60 + now.getMinutes());
+      const nowSec = now.getSeconds();
+
+      let activePair = null;
+      let nextPair = null;
+
+      todayPairs.forEach(p => {
+        const bell = BELLS.find(b => b.pair === p.pair);
+        if (!bell) return;
+        const s = timeToMinutes(bell.start);
+        const e = timeToMinutes(bell.end);
+
+        if (nowMin >= s && nowMin <= e) {
+          activePair = { ...p, start: bell.start, end: bell.end, startMin: s, endMin: e };
+        } else if (nowMin < s && (!nextPair || s < nextPair.startMin)) {
+          nextPair = { ...p, start: bell.start, end: bell.end, startMin: s };
+        }
+      });
+
+      const pill = document.getElementById('live-status-pill');
+      const banner = document.getElementById('countdown-banner');
+      const label = document.getElementById('countdown-label');
+      const timer = document.getElementById('countdown-timer');
+
+      if (activePair) {
+        pill.innerHTML = `<span class="live-indicator"><span class="pulse-dot"></span>Йде #${activePair.pair} пара</span>`;
+        banner.style.display = 'flex';
+        label.innerText = `До кінця ${activePair.pair}-ї пари:`;
+        const totalSecLeft = (activePair.endMin * 60) - (now.getHours() * 3600 + now.getMinutes() * 60 + nowSec);
+        const m = Math.max(0, Math.floor(totalSecLeft / 60));
+        const s = Math.max(0, totalSecLeft % 60);
+        timer.innerText = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      } else if (nextPair) {
+        pill.innerHTML = `<span style="font-size:12px; font-weight:700; color:var(--accent-orange); background:rgba(255,149,0,0.15); padding:5px 12px; border-radius:20px;">Перерва</span>`;
+        banner.style.display = 'flex';
+        label.innerText = `До початку #${nextPair.pair} пари:`;
+        const totalSecLeft = (nextPair.startMin * 60) - (now.getHours() * 3600 + now.getMinutes() * 60 + nowSec);
+        const m = Math.max(0, Math.floor(totalSecLeft / 60));
+        const s = Math.max(0, totalSecLeft % 60);
+        timer.innerText = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      } else {
+        pill.innerHTML = `<span style="font-size:12px; font-weight:700; color:var(--text-secondary); background:var(--segmented-bg); padding:5px 12px; border-radius:20px;">Пар немає</span>`;
+        banner.style.display = 'none';
+      }
+    }
+
     function renderDay(dayOffset, weekType, label, weekLabel) {
       const targetDate = new Date();
       targetDate.setDate(targetDate.getDate() + dayOffset);
-      
-      const dayIdx = (targetDate.getDay() + 6) % 7; // Понеділок = 0
+      const dayIdx = (targetDate.getDay() + 6) % 7;
       const dayName = DAYS_NAMES[dayIdx];
       const dateStr = targetDate.toLocaleDateString('uk-UA', { day: 'numeric', month: 'long' });
 
       document.getElementById('subtitle').innerText = `${label} • ${dayName}, ${dateStr} • ${weekLabel}`;
 
-      const pairs = (SCHEDULE[dayIdx] || [])
+      let pairs = (SCHEDULE[dayIdx] || [])
         .filter(p => p.week === null || p.week === weekType)
         .map(p => {
           const bell = BELLS.find(b => b.pair === p.pair) || { start: "??:??", end: "??:??" };
@@ -442,14 +920,18 @@
         })
         .sort((a, b) => a.pair - b.pair);
 
+      if (searchQuery) {
+        pairs = pairs.filter(p => p.name.toLowerCase().includes(searchQuery) || p.teacher.toLowerCase().includes(searchQuery) || p.room.toLowerCase().includes(searchQuery));
+      }
+
       const container = document.getElementById('container');
 
       if (pairs.length === 0) {
         container.innerHTML = `
           <div class="apple-card empty-card">
-            <div class="empty-icon">🏖️</div>
-            <div class="empty-title">Пар немає!</div>
-            <div class="empty-desc">${dayOffset === 0 ? 'Сьогодні' : 'Завтра'} занять немає, можна відпочивати.</div>
+            <div class="empty-icon">${searchQuery ? '🔍' : '🏖️'}</div>
+            <div class="empty-title">${searchQuery ? 'Нічого не знайдено' : 'Пар немає!'}</div>
+            <div class="empty-desc">${searchQuery ? 'Спробуйте інший пошуковий запит' : (dayOffset === 0 ? 'Сьогодні занять немає, можна відпочивати.' : 'Завтра занять немає.')}</div>
           </div>
         `;
         return;
@@ -472,8 +954,11 @@
           minLeft = Math.max(0, endMin - nowMin);
         }
 
+        const memoKey = `memo_${p.name}_${p.pair}`;
+        const savedMemo = localStorage.getItem(memoKey);
+
         html += `
-          <div class="apple-card ${isCurrent ? 'live-card' : ''} ${isPast ? 'past-card' : ''}">
+          <div class="apple-card ${isCurrent ? 'live-card' : ''} ${isPast ? 'past-card' : ''}" onclick="openSheet(${p.pair}, '${escapeHtml(p.name)}', '${p.start}', '${p.end}', '${escapeHtml(p.room)}', '${escapeHtml(p.teacher)}', '${escapeHtml(p.type)}')">
             <div class="pair-header">
               <span class="pair-time">${p.start} – ${p.end}</span>
               ${isCurrent ? 
@@ -492,6 +977,13 @@
                 <span>${p.teacher}</span>
               </div>
             </div>
+
+            ${savedMemo ? `
+              <div class="memo-indicator">
+                <span>📝</span> <span>${escapeHtml(savedMemo).substring(0, 32)}${savedMemo.length > 32 ? '...' : ''}</span>
+              </div>
+            ` : ''}
+
             ${isCurrent ? `
               <div class="progress-wrapper">
                 <div class="progress-bar-bg">
@@ -515,8 +1007,8 @@
       const container = document.getElementById('container');
       let html = '';
 
-      for (let day = 0; day < 6; day++) { // Понеділок - Субота
-        const pairs = (SCHEDULE[day] || [])
+      for (let day = 0; day < 6; day++) {
+        let pairs = (SCHEDULE[day] || [])
           .filter(p => p.week === null || p.week === weekType)
           .map(p => {
             const bell = BELLS.find(b => b.pair === p.pair) || { start: "??:??", end: "??:??" };
@@ -524,20 +1016,24 @@
           })
           .sort((a, b) => a.pair - b.pair);
 
+        if (searchQuery) {
+          pairs = pairs.filter(p => p.name.toLowerCase().includes(searchQuery) || p.teacher.toLowerCase().includes(searchQuery) || p.room.toLowerCase().includes(searchQuery));
+          if (pairs.length === 0) continue;
+        }
+
         html += `<div class="day-section-title">📅 ${DAYS_NAMES[day]}</div>`;
 
         if (pairs.length === 0) {
-          html += `
-            <div class="apple-card" style="padding: 14px 18px; color: var(--text-secondary); font-size: 14px;">
-              Занять немає
-            </div>
-          `;
+          html += `<div class="apple-card" style="padding: 14px 18px; color: var(--text-secondary); font-size: 14px;">Занять немає</div>`;
           continue;
         }
 
         pairs.forEach(p => {
+          const memoKey = `memo_${p.name}_${p.pair}`;
+          const savedMemo = localStorage.getItem(memoKey);
+
           html += `
-            <div class="apple-card" style="padding: 14px 18px; margin-bottom: 8px;">
+            <div class="apple-card" style="padding: 15px 18px; margin-bottom: 10px;" onclick="openSheet(${p.pair}, '${escapeHtml(p.name)}', '${p.start}', '${p.end}', '${escapeHtml(p.room)}', '${escapeHtml(p.teacher)}', '${escapeHtml(p.type)}')">
               <div class="pair-header" style="margin-bottom: 4px;">
                 <span class="pair-time">${p.start} – ${p.end}</span>
                 <span class="pair-tag">#${p.pair} • ${p.type}</span>
@@ -547,9 +1043,24 @@
                 <span>🚪 ${p.room}</span>
                 <span>👨‍🏫 ${p.teacher}</span>
               </div>
+              ${savedMemo ? `
+                <div class="memo-indicator" style="margin-top: 6px;">
+                  <span>📝</span> <span>${escapeHtml(savedMemo).substring(0, 32)}</span>
+                </div>
+              ` : ''}
             </div>
           `;
         });
+      }
+
+      if (!html) {
+        html = `
+          <div class="apple-card empty-card">
+            <div class="empty-icon">🔍</div>
+            <div class="empty-title">Нічого не знайдено</div>
+            <div class="empty-desc">Спробуйте інший пошуковий запит</div>
+          </div>
+        `;
       }
 
       container.innerHTML = html;
@@ -569,21 +1080,73 @@
 
       document.getElementById('container').innerHTML = `
         <div class="apple-card">
-          <div style="font-weight: 800; font-size: 17px; margin-bottom: 10px;">Сітка дзвінків</div>
+          <div style="font-weight: 800; font-size: 17px; margin-bottom: 12px;">Сітка дзвінків</div>
           ${items}
         </div>
       `;
     }
 
+    // --- МОДАЛЬНЕ ВІКНО ДЕТАЛЕЙ ПАРИ ТА НОТАТОК (BOTTOM SHEET) ---
+    function openSheet(pairNum, name, start, end, room, teacher, type) {
+      haptic('medium');
+      selectedPairForModal = { pairNum, name, start, end, room, teacher, type };
+
+      document.getElementById('sheet-pair-tag').innerText = `Пара #${pairNum} • ${type}`;
+      document.getElementById('sheet-title').innerText = name;
+      document.getElementById('sheet-time').innerText = `${start} – ${end}`;
+      document.getElementById('sheet-room').innerText = room;
+      document.getElementById('sheet-teacher').innerText = teacher;
+
+      const memoKey = `memo_${name}_${pairNum}`;
+      document.getElementById('sheet-memo').value = localStorage.getItem(memoKey) || '';
+
+      document.getElementById('sheet-overlay').classList.add('active');
+      document.getElementById('bottom-sheet').classList.add('active');
+    }
+
+    function closeSheet() {
+      haptic('light');
+      document.getElementById('sheet-overlay').classList.remove('active');
+      document.getElementById('bottom-sheet').classList.remove('active');
+    }
+
+    function saveMemo() {
+      if (!selectedPairForModal) return;
+      haptic('success');
+      const memoKey = `memo_${selectedPairForModal.name}_${selectedPairForModal.pairNum}`;
+      const val = document.getElementById('sheet-memo').value.trim();
+      if (val) {
+        localStorage.setItem(memoKey, val);
+      } else {
+        localStorage.removeItem(memoKey);
+      }
+      showToast('Нотатку збережено! 💾');
+      closeSheet();
+      render();
+    }
+
+    function copyPairInfo() {
+      if (!selectedPairForModal) return;
+      haptic('light');
+      const text = `${selectedPairForModal.name}\nЧас: ${selectedPairForModal.start}-${selectedPairForModal.end}\nАудиторія: ${selectedPairForModal.room}\nВикладач: ${selectedPairForModal.teacher}`;
+      navigator.clipboard?.writeText(text);
+      showToast('Інформацію скопійовано! 📋');
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+    }
+
     // Перший запуск
     render();
 
-    // Автоматичне оновлення кожні 15 секунд для плавності таймера та прогрес-бару
+    // Оновлення таймера відліку кожну 1 секунду для живого годинника
     setInterval(() => {
-      if (currentTab === 'today') {
-        render();
-      }
-    }, 15000);
+      const now = new Date();
+      const currentWeek = getWeekType(now);
+      updateSummaryWidget(now, currentWeek);
+    }, 1000);
   </script>
 </body>
 </html>
