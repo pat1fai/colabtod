@@ -95,7 +95,7 @@
     .theme-btn {
       border: none;
       background: transparent;
-      padding: 6px 10px;
+      padding: 6px 11px;
       font-size: 13px;
       font-weight: 600;
       border-radius: 16px;
@@ -323,7 +323,7 @@
       margin-bottom: 8px;
     }
     .pair-time {
-      font-size: 14.5px;
+      font-size: 15px;
       font-weight: 700;
       color: var(--accent-blue);
       letter-spacing: -0.2px;
@@ -554,10 +554,7 @@
     }
 
     .bell-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 13px 0;
+      padding: 14px 0;
       border-bottom: 1px solid var(--card-border);
     }
     .bell-item:last-child {
@@ -684,14 +681,7 @@
   </div>
 
   <script>
-    // --- ДАНІ РОЗКЛАДУ ГРУПИ КМ 24-9-1 ---
-    const BELLS = [
-      { pair: 1, start: "08:30", end: "10:00", breakTime: "15 хв" },
-      { pair: 2, start: "10:15", end: "11:45", breakTime: "30 хв (велика перерва)" },
-      { pair: 3, start: "12:15", end: "13:45", breakTime: "15 хв" },
-      { pair: 4, start: "14:00", end: "15:30", breakTime: "Кінець занять" },
-    ];
-
+    // --- ОНОВЛЕНИЙ ТОЧНИЙ РОЗКЛАД ГРУПИ КМ 24-9-1 З ЧАСОМ ДЛЯ КОЖНОГО ДНЯ ---
     const DAYS_NAMES = [
       "Понеділок", "Вівторок", "Середа",
       "Четвер", "П'ятниця", "Субота", "Неділя"
@@ -699,46 +689,54 @@
 
     const SCHEDULE = {
       0: [ // Понеділок
-        { pair: 1, name: "Комп'ютерна схемотехніка і електроніка", teacher: "Габузян Г.В.", room: "Ауд. 301", type: "Лекція/Практика", week: null },
-        { pair: 3, name: "Комп'ютерна схемотехніка і електроніка", teacher: "Габузян Г.В.", room: "Ауд. 301", type: "Лекція/Практика", week: null },
-        { pair: 4, name: "Програмна інженерія", teacher: "Мілашенко А.М.", room: "Лаб. 12", type: "Практика", week: null }
+        { pair: 1, start: "11:40", end: "13:00", name: "Комп'ютерна схемотехніка і електроніка", teacher: "Габузян Г.В.", room: "Ауд. 301", type: "Лекція/Практика", week: null },
+        { pair: 2, start: "13:10", end: "14:30", name: "Програмна інженерія", teacher: "Мілашенко А.М.", room: "Лаб. 12", type: "Практика", week: null },
+        { pair: 3, start: "14:50", end: "16:10", name: "Комп'ютерна схемотехніка і електроніка", teacher: "Габузян Г.В.", room: "Ауд. 301", type: "Лекція/Практика", week: null }
       ],
       1: [ // Вівторок
-        { pair: 1, name: "Програмна інженерія", teacher: "Мілашенко А.М.", room: "Лаб. 12", type: "Практика", week: null },
-        { pair: 2, name: "Методи та системи штучного інтелекту", teacher: "Мілашенко А.М.", room: "Лаб. 12", type: "Лекція", week: null },
-        { pair: 3, name: "Комп'ютерні системи", teacher: "Мурчкова М.М.", room: "Ауд. 204", type: "Лекція", week: null },
-        { pair: 4, name: "Методи та системи штучного інтелекту", teacher: "Мілашенко А.М.", room: "Лаб. 12", type: "Практика", week: null }
+        { pair: 1, start: "09:50", end: "11:00", name: "Методи та системи штучного інтелекту", teacher: "Мілашенко А.М.", room: "Лаб. 12", type: "Лекція", week: null },
+        { pair: 2, start: "11:20", end: "12:30", name: "Комп'ютерні системи", teacher: "Мурчкова М.М.", room: "Ауд. 204", type: "Лекція", week: null },
+        { pair: 3, start: "12:40", end: "13:50", name: "Методи та системи штучного інтелекту", teacher: "Мілашенко А.М.", room: "Лаб. 12", type: "Практика", week: null },
+        { pair: 4, start: "14:55", end: "16:05", name: "Програмна інженерія", teacher: "Мілашенко А.М.", room: "Лаб. 12", type: "Практика", week: null }
       ],
       2: [ // Середа
-        { pair: 1, name: "Архітектура комп'ютерів", teacher: "Мурчкова М.М.", room: "Ауд. 204", type: "Лекція", week: null },
-        { pair: 2, name: "Програмна інженерія", teacher: "Мілашенко А.М.", room: "Лаб. 12", type: "Практика", week: null },
-        { pair: 3, name: "Основи національного спротиву (ОНС)", teacher: "Хмарук Ю.С.", room: "Ауд. 105", type: "Лекція", week: null },
-        { pair: 4, name: "Комп'ютерна схемотехніка і електроніка", teacher: "Габузян Г.В.", room: "Ауд. 301", type: "Практика", week: null }
+        { pair: 1, start: "10:00", end: "11:20", name: "Програмна інженерія", teacher: "Мілашенко А.М.", room: "Лаб. 12", type: "Практика", week: null },
+        { pair: 2, start: "11:40", end: "13:00", name: "Основи національного спротиву (ОНС)", teacher: "Хмарук Ю.С.", room: "Ауд. 105", type: "Лекція", week: null },
+        { pair: 3, start: "13:10", end: "14:30", name: "Комп'ютерна схемотехніка і електроніка", teacher: "Габузян Г.В.", room: "Ауд. 301", type: "Практика", week: null },
+        { pair: 4, start: "15:00", end: "16:20", name: "Архітектура комп'ютерів", teacher: "Мурчкова М.М.", room: "Ауд. 204", type: "Лекція", week: null }
       ],
       3: [ // Четвер
-        { pair: 1, name: "Програмування", teacher: "Шинкаренко Л.М.", room: "Лаб. 10", type: "Практика", week: null },
-        { pair: 2, name: "Основи національного спротиву (ОНС)", teacher: "Хмарук Ю.С.", room: "Ауд. 105", type: "Практика", week: 1 },
-        { pair: 3, name: "Комп'ютерні системи", teacher: "Мурчкова М.М.", room: "Ауд. 204", type: "Практика", week: null },
-        { pair: 4, name: "Програмування", teacher: "Шинкаренко Л.М.", room: "Лаб. 10", type: "Практика", week: null }
+        { pair: 1, start: "10:00", end: "11:20", name: "Комп'ютерні системи", teacher: "Мурчкова М.М.", room: "Ауд. 204", type: "Практика", week: null },
+        { pair: 2, start: "11:40", end: "13:00", name: "Програмування", teacher: "Шинкаренко Л.М.", room: "Лаб. 10", type: "Практика", week: null },
+        { pair: 3, start: "13:10", end: "14:30", name: "Програмування", teacher: "Шинкаренко Л.М.", room: "Лаб. 10", type: "Практика", week: null },
+        { pair: 4, start: "14:50", end: "16:10", name: "Основи національного спротиву (ОНС)", teacher: "Хмарук Ю.С.", room: "Ауд. 105", type: "Практика", week: 1 }
       ],
       4: [ // П'ятниця
-        { pair: 1, name: "Українська мова за ПС", teacher: "Петрухненко В.В.", room: "Ауд. 410", type: "Практика", week: null },
-        { pair: 2, name: "Програмна інженерія", teacher: "Мілашенко А.М.", room: "Лаб. 12", type: "Практика", week: null },
-        { pair: 3, name: "Методи та системи штучного інтелекту", teacher: "Мілашенко А.М.", room: "Лаб. 12", type: "Лекція", week: null },
-        { pair: 4, name: "Фізичне виховання", teacher: "Коломоєць В.М.", room: "Спорткомплекс", type: "Практика", week: null }
+        { pair: 1, start: "10:00", end: "11:20", name: "Програмна інженерія", teacher: "Мілашенко А.М.", room: "Лаб. 12", type: "Практика", week: null },
+        { pair: 2, start: "11:40", end: "13:00", name: "Методи та системи штучного інтелекту", teacher: "Мілашенко А.М.", room: "Лаб. 12", type: "Лекція", week: null },
+        { pair: 3, start: "13:10", end: "14:30", name: "Фізичне виховання", teacher: "Коломоєць В.М.", room: "Спорткомплекс", type: "Практика", week: null },
+        { pair: 4, start: "14:50", end: "16:10", name: "Українська мова за ПС", teacher: "Петрухненко В.В.", room: "Ауд. 410", type: "Практика", week: null }
       ],
       5: [ // Субота
-        { pair: 1, name: "Методи та системи штучного інтелекту", teacher: "Мілашенко А.М.", room: "Лаб. 12", type: "Практика", week: 1 },
-        { pair: 1, name: "Українська мова за ПС", teacher: "Петрухненко В.В.", room: "Ауд. 410", type: "Практика", week: 2 },
-        { pair: 2, name: "Комп'ютерні системи", teacher: "Мурчкова М.М.", room: "Ауд. 204", type: "Лабораторна", week: 1 },
-        { pair: 2, name: "Фізичне виховання", teacher: "Коломоєць В.М.", room: "Спорткомплекс", type: "Практика", week: 2 },
-        { pair: 3, name: "Архітектура комп'ютерів", teacher: "Мурчкова М.М.", room: "Ауд. 204", type: "Практика", week: null },
-        { pair: 4, name: "Комп'ютерна схемотехніка і електроніка", teacher: "Габузян Г.В.", room: "Ауд. 301", type: "Практика", week: 1 }
+        { pair: 1, start: "10:00", end: "11:20", name: "Комп'ютерні системи", teacher: "Мурчкова М.М.", room: "Ауд. 204", type: "Лабораторна", week: 1 },
+        { pair: 1, start: "10:00", end: "11:20", name: "Фізичне виховання", teacher: "Коломоєць В.М.", room: "Спорткомплекс", type: "Практика", week: 2 },
+        { pair: 2, start: "11:40", end: "13:00", name: "Архітектура комп'ютерів", teacher: "Мурчкова М.М.", room: "Ауд. 204", type: "Практика", week: null },
+        { pair: 3, start: "13:10", end: "14:30", name: "Комп'ютерна схемотехніка і електроніка", teacher: "Габузян Г.В.", room: "Ауд. 301", type: "Практика", week: 1 },
+        { pair: 4, start: "14:50", end: "16:10", name: "Методи та системи штучного інтелекту", teacher: "Мілашенко А.М.", room: "Лаб. 12", type: "Практика", week: 1 },
+        { pair: 4, start: "14:50", end: "16:10", name: "Українська мова за ПС", teacher: "Петрухненко В.В.", room: "Ауд. 410", type: "Практика", week: 2 }
       ],
       6: [] // Неділя
     };
 
-    // --- БЕЗПЕЧНА РОБОТА З ПАМ'ЯТТЮ ТА HAPTICS ---
+    // Розклад дзвінків для перегляду у вкладці "Дзвінки"
+    const BELLS_PREVIEWS = [
+      { day: "Понеділок", pairs: ["11:40 – 13:00 (1 пара)", "13:10 – 14:30 (2 пара)", "14:50 – 16:10 (3 пара)"] },
+      { day: "Вівторок", pairs: ["09:50 – 11:00 (1 пара)", "11:20 – 12:30 (2 пара)", "12:40 – 13:50 (3 пара)", "14:55 – 16:05 (4 пара)"] },
+      { day: "Середа", pairs: ["10:00 – 11:20 (1 пара)", "11:40 – 13:00 (2 пара)", "13:10 – 14:30 (3 пара)", "15:00 – 16:20 (4 пара)"] },
+      { day: "Четвер – Субота", pairs: ["10:00 – 11:20 (1 пара)", "11:40 – 13:00 (2 пара)", "13:10 – 14:30 (3 пара)", "14:50 – 16:10 (4 пара)"] }
+    ];
+
+    // --- БЕЗПЕЧНА РОБОТА З STORAGE & TELEGRAM ---
     function safeGet(key, def = null) {
       try { return localStorage.getItem(key) || def; } catch (e) { return def; }
     }
@@ -771,7 +769,7 @@
       setTimeout(() => t.classList.remove('active'), 2200);
     }
 
-    // --- ПЕРЕМИКАННЯ ТЕМ (APPLE CONTROL CENTER) ---
+    // --- КЕРУВАННЯ ТЕМАМИ (APPLE THEMES) ---
     function setTheme(mode) {
       haptic('selection');
       safeSet('km_theme', mode);
@@ -802,7 +800,6 @@
       }
     }
 
-    // --- РОЗРАХУНОК ТИЖНЯ ТА ДНЯ ---
     function getWeekNumber(d) {
       d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
       d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
@@ -816,8 +813,8 @@
     }
 
     function getDayIndex(date) {
-      const jsDay = date.getDay(); // 0 = Неділя, 1 = Понеділок...
-      return jsDay === 0 ? 6 : jsDay - 1; // 0 = Понеділок, 6 = Неділя
+      const jsDay = date.getDay();
+      return jsDay === 0 ? 6 : jsDay - 1;
     }
 
     function timeToMinutes(timeStr) {
@@ -850,7 +847,6 @@
       render();
     }
 
-    // --- ГОЛОВНИЙ РЕНДЕР ---
     function render() {
       try {
         const now = new Date();
@@ -893,15 +889,13 @@
       let nextPair = null;
 
       todayPairs.forEach(p => {
-        const bell = BELLS.find(b => b.pair === p.pair);
-        if (!bell) return;
-        const s = timeToMinutes(bell.start);
-        const e = timeToMinutes(bell.end);
+        const s = timeToMinutes(p.start);
+        const e = timeToMinutes(p.end);
 
         if (nowMin >= s && nowMin <= e) {
-          activePair = { ...p, start: bell.start, end: bell.end, startMin: s, endMin: e };
+          activePair = { ...p, startMin: s, endMin: e };
         } else if (nowMin < s && (!nextPair || s < nextPair.startMin)) {
-          nextPair = { ...p, start: bell.start, end: bell.end, startMin: s };
+          nextPair = { ...p, startMin: s };
         }
       });
 
@@ -911,7 +905,7 @@
       const timer = document.getElementById('countdown-timer');
 
       if (activePair) {
-        pill.innerHTML = `<span class="live-indicator"><span class="pulse-dot"></span>Йде #${activePair.pair} пара</span>`;
+        pill.innerHTML = `<span class="live-indicator"><span class="pulse-dot"></span>Зараз #${activePair.pair} пара</span>`;
         banner.style.display = 'flex';
         label.innerText = `До кінця ${activePair.pair}-ї пари:`;
         const totalSecLeft = (activePair.endMin * 60) - (now.getHours() * 3600 + now.getMinutes() * 60 + nowSec);
@@ -921,7 +915,7 @@
       } else if (nextPair) {
         pill.innerHTML = `<span style="font-size:12px; font-weight:700; color:var(--accent-orange); background:rgba(255,149,0,0.16); padding:5px 12px; border-radius:20px;">Перерва</span>`;
         banner.style.display = 'flex';
-        label.innerText = `До початку #${nextPair.pair} пари:`;
+        label.innerText = `До початку #${nextPair.pair} пари (${nextPair.start}):`;
         const totalSecLeft = (nextPair.startMin * 60) - (now.getHours() * 3600 + now.getMinutes() * 60 + nowSec);
         const m = Math.max(0, Math.floor(totalSecLeft / 60));
         const s = Math.max(0, totalSecLeft % 60);
@@ -945,10 +939,6 @@
 
       let pairs = (SCHEDULE[dayIdx] || [])
         .filter(p => p.week === null || p.week === weekType)
-        .map(p => {
-          const bell = BELLS.find(b => b.pair === p.pair) || { start: "??:??", end: "??:??" };
-          return { ...p, start: bell.start, end: bell.end };
-        })
         .sort((a, b) => a.pair - b.pair);
 
       if (searchQuery) {
@@ -957,14 +947,12 @@
 
       const container = document.getElementById('container');
 
-      // Якщо на сьогодні пар немає (вихідний) — показуємо найближчий робочий день (Понеділок)
       if (pairs.length === 0) {
         let altHtml = '';
         if (!searchQuery && dayOffset === 0) {
-          // Показуємо пари понеділка
           const monPairs = (SCHEDULE[0] || []).filter(p => p.week === null || p.week === weekType);
           altHtml = `
-            <div class="day-section-title" style="margin-top: 24px;">📅 Розклад на Понеділок:</div>
+            <div class="day-section-title" style="margin-top: 24px;">📅 Найближчий навчальний день (Понеділок):</div>
             ${renderPairsListHtml(monPairs, 0, false)}
           `;
         }
@@ -973,7 +961,7 @@
           <div class="apple-card empty-card">
             <div class="empty-icon">${searchQuery ? '🔍' : '🏖️'}</div>
             <div class="empty-title">${searchQuery ? 'Нічого не знайдено' : 'На цей день пар немає!'}</div>
-            <div class="empty-desc">${searchQuery ? 'Спробуйте інший пошуковий запит' : (dayOffset === 0 ? 'Сьогодні вихідний, можна спокійно відпочивати.' : 'Завтра занять немає.')}</div>
+            <div class="empty-desc">${searchQuery ? 'Спробуйте інший пошуковий запит' : (dayOffset === 0 ? 'Сьогодні вихідний день, занять немає.' : 'Завтра занять немає.')}</div>
           </div>
           ${altHtml}
         `;
@@ -989,9 +977,8 @@
 
       let html = '';
       pairs.forEach(p => {
-        const bell = BELLS.find(b => b.pair === p.pair) || { start: p.start || "??:??", end: p.end || "??:??" };
-        const start = bell.start;
-        const end = bell.end;
+        const start = p.start;
+        const end = p.end;
 
         const startMin = timeToMinutes(start);
         const endMin = timeToMinutes(end);
@@ -1061,10 +1048,6 @@
       for (let day = 0; day < 6; day++) {
         let pairs = (SCHEDULE[day] || [])
           .filter(p => p.week === null || p.week === weekType)
-          .map(p => {
-            const bell = BELLS.find(b => b.pair === p.pair) || { start: "??:??", end: "??:??" };
-            return { ...p, start: bell.start, end: bell.end };
-          })
           .sort((a, b) => a.pair - b.pair);
 
         if (searchQuery) {
@@ -1097,37 +1080,34 @@
 
     function renderBells() {
       document.getElementById('subtitle').innerText = 'Розклад дзвінків • ВСП ФК КрНУ';
-      let items = BELLS.map(b => `
+      let items = BELLS_PREVIEWS.map(b => `
         <div class="bell-item">
-          <div>
-            <div style="font-weight: 700; font-size: 15px;">#${b.pair} пара</div>
-            <div style="font-size: 12px; color: var(--text-secondary);">Перерва: ${b.breakTime}</div>
+          <div style="font-weight: 800; font-size: 16px; margin-bottom: 6px; color: var(--accent-blue);">📅 ${b.day}</div>
+          <div style="display: flex; flex-direction: column; gap: 4px; font-size: 14px;">
+            ${b.pairs.map(p => `<div>⏰ <b>${p}</b></div>`).join('')}
           </div>
-          <div style="font-weight: 700; color: var(--accent-blue); font-size: 15px;">${b.start} – ${b.end}</div>
         </div>
       `).join('');
 
       document.getElementById('container').innerHTML = `
         <div class="apple-card">
-          <div style="font-weight: 800; font-size: 17px; margin-bottom: 12px;">Сітка дзвінків</div>
+          <div style="font-weight: 800; font-size: 18px; margin-bottom: 14px;">Сітка дзвінків по днях</div>
           ${items}
         </div>
       `;
     }
 
-    // --- ВІДКРИТТЯ МОДАЛКИ ПАРИ ЧЕРЕЗ ІНДЕКС (БЕЗ ПОМИЛОК ЛАПОК В ONCLICK) ---
     function openPairModal(dayIdx, pairNum) {
       haptic('medium');
       const dayPairs = SCHEDULE[dayIdx] || [];
       const p = dayPairs.find(item => item.pair === pairNum);
       if (!p) return;
 
-      const bell = BELLS.find(b => b.pair === p.pair) || { start: "08:30", end: "10:00" };
-      selectedPairForModal = { ...p, start: bell.start, end: bell.end };
+      selectedPairForModal = { ...p };
 
       document.getElementById('sheet-pair-tag').innerText = `Пара #${p.pair} • ${p.type}`;
       document.getElementById('sheet-title').innerText = p.name;
-      document.getElementById('sheet-time').innerText = `${bell.start} – ${bell.end}`;
+      document.getElementById('sheet-time').innerText = `${p.start} – ${p.end}`;
       document.getElementById('sheet-room').innerText = p.room;
       document.getElementById('sheet-teacher').innerText = p.teacher;
 
@@ -1177,13 +1157,13 @@
     }
 
     // Ініціалізація теми
-    const savedTheme = safeGet('km_theme', 'auto');
+    const savedTheme = safeGet('km_theme', 'light');
     setTheme(savedTheme);
 
-    // Перший запуск рендеру
+    // Рендер
     render();
 
-    // Оновлення таймера щосекунди
+    // Оновлення таймера кожну 1 секунду
     setInterval(() => {
       const now = new Date();
       const currentWeek = getWeekType(now);

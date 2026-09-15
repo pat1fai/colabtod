@@ -1,15 +1,15 @@
 from datetime import datetime, timedelta
 from config import TIMEZONE
-from schedule_data import BELLS, WEEKLY_SCHEDULE, DAYS_NAMES
+from schedule_data import WEEKLY_SCHEDULE, DAYS_NAMES
 
 def get_now():
-    """Поточний час у часовому поясі навчального закладу."""
+    """Поточний час у часовому поясі навчального закладу (Київ)."""
     return datetime.now(TIMEZONE)
 
 def get_current_week_type(dt=None) -> int:
     """
     Визначає чисельник (1) або знаменник (2).
-    За стандартним календарем непарний тиждень - 1 (чисельник), парний - 2 (знаменник).
+    За стандартним календарем: непарний тиждень - 1 (чисельник), парний - 2 (знаменник).
     """
     if dt is None:
         dt = get_now()
@@ -20,16 +20,9 @@ def time_to_minutes(t_str: str) -> int:
     h, m = map(int, t_str.split(":"))
     return h * 60 + m
 
-def get_pair_bells(pair_num: int):
-    for b in BELLS:
-        if b["pair"] == pair_num:
-            return b
-    return None
-
 def get_day_schedule(day_offset: int = 0, force_week: int = None):
     """
-    Повертає розклад на день з урахуванням зсуву та тижня.
-    day_offset: 0 - сьогодні, 1 - завтра тощо.
+    Повертає розклад на день із урахуванням дня тижня та чисельника/знаменника.
     """
     now = get_now() + timedelta(days=day_offset)
     day_idx = now.weekday()
@@ -39,13 +32,8 @@ def get_day_schedule(day_offset: int = 0, force_week: int = None):
     filtered_pairs = []
 
     for item in all_pairs:
-        if item["week"] is None or item["week"] == target_week:
-            bells = get_pair_bells(item["pair"])
-            filtered_pairs.append({
-                **item,
-                "start": bells["start"] if bells else "??:??",
-                "end": bells["end"] if bells else "??:??"
-            })
+        if item.get("week") is None or item.get("week") == target_week:
+            filtered_pairs.append({**item})
 
     filtered_pairs.sort(key=lambda x: x["pair"])
     week_label = "Чисельник (1 тиждень)" if target_week == 1 else "Знаменник (2 тиждень)"
@@ -62,7 +50,7 @@ def get_day_schedule(day_offset: int = 0, force_week: int = None):
 def get_current_and_next_pair():
     """
     Визначає поточну пару (з прогресом у % та хвилинами до кінця)
-    та наступну пару (з кількістю хвилин до початку).
+    та наступну пару (з кількістю хвилин до початку) на сьогодні.
     """
     now = get_now()
     day_idx = now.weekday()
@@ -74,30 +62,22 @@ def get_current_and_next_pair():
     next_pair = None
 
     for item in pairs:
-        if item["week"] is not None and item["week"] != current_week:
+        if item.get("week") is not None and item.get("week") != current_week:
             continue
 
-        bells = get_pair_bells(item["pair"])
-        if not bells:
-            continue
+        start_min = time_to_minutes(item["start"])
+        end_min = time_to_minutes(item["end"])
 
-        start_min = time_to_minutes(bells["start"])
-        end_min = time_to_minutes(bells["end"])
+        pair_data = {**item}
 
-        pair_data = {
-            **item,
-            "start": bells["start"],
-            "end": bells["end"]
-        }
-
-        # Якщо пара зараз іде
+        # Якщо пара триває зараз
         if start_min <= current_minutes <= end_min:
             duration = max(1, end_min - start_min)
             progress = int(((current_minutes - start_min) / duration) * 100)
             pair_data["progress"] = min(100, max(0, progress))
             pair_data["minutes_left"] = max(0, end_min - current_minutes)
             current_pair = pair_data
-        # Якщо пара ще попереду сьогодні
+        # Якщо пара буде наступною сьогодні
         elif start_min > current_minutes:
             if next_pair is None or start_min < time_to_minutes(next_pair["start"]):
                 pair_data["minutes_until"] = start_min - current_minutes
