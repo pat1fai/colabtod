@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Розклад пар • КМ 24-9-1</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root {
+      --bg: #F2F2F7;
+      --card-bg: rgba(255, 255, 255, 0.82);
+      --card-border: rgba(0, 0, 0, 0.06);
+      --text-primary: #000000;
+      --text-secondary: #8E8E93;
+      --accent-blue: #007AFF;
+      --accent-green: #34C759;
+      --accent-orange: #FF9500;
+      --accent-purple: #AF52DE;
+      --segmented-bg: rgba(118, 118, 128, 0.14);
+      --blur: blur(28px);
+      --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #000000;
+        --card-bg: rgba(28, 28, 30, 0.85);
+        --card-border: rgba(255, 255, 255, 0.09);
+        --text-primary: #FFFFFF;
+        --text-secondary: #98989D;
+        --segmented-bg: rgba(118, 118, 128, 0.28);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-family);
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-primary);
+      padding: 16px;
+      padding-top: calc(env(safe-area-inset-top, 16px) + 12px);
+      padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 36px);
+      min-height: 100vh;
+      transition: background-color 0.3s ease;
+    }
+
+    /* Apple Header */
+    .header-section {
+      margin-bottom: 18px;
+    }
+    .college-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--accent-blue);
+      margin-bottom: 4px;
+    }
+    .group-title {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.6px;
+      line-height: 1.15;
+    }
+    .date-subtitle {
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-weight: 500;
+      margin-top: 4px;
+    }
+
+    /* iOS Segmented Control */
+    .segmented-scroll {
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      margin: 0 -16px 18px -16px;
+      padding: 0 16px;
+    }
+    .segmented-scroll::-webkit-scrollbar {
+      display: none;
+    }
+    .segmented-control {
+      display: flex;
+      background: var(--segmented-bg);
+      border-radius: 12px;
+      padding: 3px;
+      gap: 2px;
+      min-width: 390px;
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      box-shadow: inset 0 0 1px rgba(0,0,0,0.08);
+    }
+    .segmented-btn {
+      flex: 1;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      border: none;
+      background: transparent;
+      color: var(--text-primary);
+      border-radius: 9px;
+      cursor: pointer;
+      white-space: nowrap;
+      text-align: center;
+      transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .segmented-btn.active {
+      background: var(--card-bg);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+      color: var(--text-primary);
+    }
+
+    /* Apple Glass Cards */
+    .apple-card {
+      background: var(--card-bg);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 18px;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+      position: relative;
+      transition: transform 0.15s ease, border-color 0.2s ease;
+    }
+    .apple-card:active {
+      transform: scale(0.992);
+    }
+    .apple-card.live-card {
+      border: 1.5px solid rgba(52, 199, 89, 0.6);
+      box-shadow: 0 8px 30px rgba(52, 199, 89, 0.15);
+    }
+    .apple-card.past-card {
+      opacity: 0.65;
+    }
+
+    /* Badges */
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(52, 199, 89, 0.16);
+      color: var(--accent-green);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      animation: pulse 1.6s infinite ease-in-out;
+    }
+    @keyframes pulse {
+      0% { transform: scale(0.85); opacity: 0.7; }
+      50% { transform: scale(1.35); opacity: 1; }
+      100% { transform: scale(0.85); opacity: 0.7; }
+    }
+
+    .pair-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .pair-time {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent-blue);
+      letter-spacing: -0.2px;
+    }
+    .pair-tag {
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+    .pair-title {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.4px;
+      line-height: 1.25;
+      margin-bottom: 10px;
+    }
+    .pair-details {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      font-size: 13.5px;
+      color: var(--text-secondary);
+    }
+    .detail-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .icon-symbol {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      background: rgba(118, 118, 128, 0.12);
+      border-radius: 6px;
+      font-size: 12px;
+    }
+
+    /* Live Progress Bar */
+    .progress-wrapper {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--card-border);
+    }
+    .progress-bar-bg {
+      background: rgba(120, 120, 128, 0.18);
+      border-radius: 8px;
+      height: 7px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      background: linear-gradient(90deg, #34C759, #30D158);
+      height: 100%;
+      border-radius: 8px;
+      transition: width 0.6s ease;
+    }
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--accent-green);
+      font-weight: 600;
+      margin-top: 6px;
+    }
+
+    /* Day Title Section for Week Views */
+    .day-section-title {
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      margin: 22px 0 10px 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Empty state */
+    .empty-card {
+      text-align: center;
+      padding: 50px 20px;
+    }
+    .empty-icon {
+      font-size: 42px;
+      margin-bottom: 12px;
+    }
+    .empty-title {
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .empty-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    /* Bells table */
+    .bell-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .bell-item:last-child {
+      border-bottom: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="header-section">
+    <div class="college-tag">ВСП ФК КрНУ</div>
+    <div class="group-title">КМ 24-9-1</div>
+    <div class="date-subtitle" id="subtitle">Завантаження...</div>
+  </div>
+
+  <div class="segmented-scroll">
+    <div class="segmented-control">
+      <button class="segmented-btn active" onclick="switchTab('today', this)">Сьогодні</button>
+      <button class="segmented-btn" onclick="switchTab('tomorrow', this)">Завтра</button>
+      <button class="segmented-btn" onclick="switchTab('week1', this)">1 тиждень</button>
+      <button class="segmented-btn" onclick="switchTab('week2', this)">2 тиждень</button>
+      <button class="segmented-btn" onclick="switchTab('bells', this)">Дзвінки</button>
+    </div>
+  </div>
+
+  <div id="container"></div>
+
+  <script>
+    // --- ДАНІ РОЗКЛАДУ ГРУПИ КМ 24-9-1 ---
+    const BELLS = [
+      { pair: 1, start: "08:30", end: "10:00", breakTime: "15 хв" },
+      { pair: 2, start: "10:15", end: "11:45", breakTime: "30 хв (велика перерва)" },
+      { pair: 3, start: "12:15", end: "13:45", breakTime: "15 хв" },
+      { pair: 4, start: "14:00", end: "15:30", breakTime: "Кінець занять" },
+    ];
+
+    const DAYS_NAMES = [
+      "Понеділок", "Вівторок", "Середа",
+      "Четвер", "П'ятниця", "Субота", "Неділя"
+    ];
+
+    // week: null (щотижня), 1 (чисельник), 2 (знаменник)
+    const SCHEDULE = {
+      0: [ // Понеділок
+        { pair: 1, name: "Комп'ютерна схемотехніка і електроніка", teacher: "Габузян Г.В.", room: "Ауд. 301", type: "Лекція/Практика", week: null },
+        { pair: 3, name: "Комп'ютерна схемотехніка і електроніка", teacher: "Габузян Г.В.", room: "Ауд. 301", type: "Лекція/Практика", week: null },
+        { pair: 4, name: "Програмна інженерія", teacher: "Мілашенко А.М.", room: "Лаб. 12", type: "Практика", week: null }
+      ],
+      1: [ // Вівторок
+        { pair: 1, name: "Програмна інженерія", teacher: "Мілашенко А.М.", room: "Лаб. 12", type: "Практика", week: null },
+        { pair: 2, name: "Методи та системи штучного інтелекту", teacher: "Мілашенко А.М.", room: "Лаб. 12", type: "Лекція", week: null },
+        { pair: 3, name: "Комп'ютерні системи", teacher: "Мурчкова М.М.", room: "Ауд. 204", type: "Лекція", week: null },
+        { pair: 4, name: "Методи та системи штучного інтелекту", teacher: "Мілашенко А.М.", room: "Лаб. 12", type: "Практика", week: null }
+      ],
+      2: [ // Середа
+        { pair: 1, name: "Архітектура комп'ютерів", teacher: "Мурчкова М.М.", room: "Ауд. 204", type: "Лекція", week: null },
+        { pair: 2, name: "Програмна інженерія", teacher: "Мілашенко А.М.", room: "Лаб. 12", type: "Практика", week: null },
+        { pair: 3, name: "Основи національного спротиву (ОНС)", teacher: "Хмарук Ю.С.", room: "Ауд. 105", type: "Лекція", week: null },
+        { pair: 4, name: "Комп'ютерна схемотехніка і електроніка", teacher: "Габузян Г.В.", room: "Ауд. 301", type: "Практика", week: null }
+      ],
+      3: [ // Четвер
+        { pair: 1, name: "Програмування", teacher: "Шинкаренко Л.М.", room: "Лаб. 10", type: "Практика", week: null },
+        { pair: 2, name: "Основи національного спротиву (ОНС)", teacher: "Хмарук Ю.С.", room: "Ауд. 105", type: "Практика", week: 1 },
+        { pair: 3, name: "Комп'ютерні системи", teacher: "Мурчкова М.М.", room: "Ауд. 204", type: "Практика", week: null },
+        { pair: 4, name: "Програмування", teacher: "Шинкаренко Л.М.", room: "Лаб. 10", type: "Практика", week: null }
+      ],
+      4: [ // П'ятниця
+        { pair: 1, name: "Українська мова за ПС", teacher: "Петрухненко В.В.", room: "Ауд. 410", type: "Практика", week: null },
+        { pair: 2, name: "Програмна інженерія", teacher: "Мілашенко А.М.", room: "Лаб. 12", type: "Практика", week: null },
+        { pair: 3, name: "Методи та системи штучного інтелекту", teacher: "Мілашенко А.М.", room: "Лаб. 12", type: "Лекція", week: null },
+        { pair: 4, name: "Фізичне виховання", teacher: "Коломоєць В.М.", room: "Спорткомплекс", type: "Практика", week: null }
+      ],
+      5: [ // Субота
+        { pair: 1, name: "Методи та системи штучного інтелекту", teacher: "Мілашенко А.М.", room: "Лаб. 12", type: "Практика", week: 1 },
+        { pair: 1, name: "Українська мова за ПС", teacher: "Петрухненко В.В.", room: "Ауд. 410", type: "Практика", week: 2 },
+        { pair: 2, name: "Комп'ютерні системи", teacher: "Мурчкова М.М.", room: "Ауд. 204", type: "Лабораторна", week: 1 },
+        { pair: 2, name: "Фізичне виховання", teacher: "Коломоєць В.М.", room: "Спорткомплекс", type: "Практика", week: 2 },
+        { pair: 3, name: "Архітектура комп'ютерів", teacher: "Мурчкова М.М.", room: "Ауд. 204", type: "Практика", week: null },
+        { pair: 4, name: "Комп'ютерна схемотехніка і електроніка", teacher: "Габузян Г.В.", room: "Ауд. 301", type: "Практика", week: 1 }
+      ],
+      6: [] // Неділя
+    };
+
+    // --- ІНІЦІАЛІЗАЦІЯ TELEGRAM WEBAPP ---
+    const tg = window.Telegram?.WebApp;
+    if (tg) {
+      tg.expand();
+      tg.ready();
+    }
+
+    function haptic(style = 'light') {
+      if (tg?.HapticFeedback) {
+        tg.HapticFeedback.impactOccurred(style);
+      }
+    }
+
+    // Розрахунок номера календарного тижня
+    function getWeekNumber(d) {
+      d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+      d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+      const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+      return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+    }
+
+    // 1 - чисельник, 2 - знаменник
+    function getWeekType(date = new Date()) {
+      const weekNum = getWeekNumber(date);
+      return (weekNum % 2 !== 0) ? 1 : 2;
+    }
+
+    function timeToMinutes(timeStr) {
+      const [h, m] = timeStr.split(':').map(Number);
+      return h * 60 + m;
+    }
+
+    let currentTab = 'today';
+
+    function switchTab(tab, btn) {
+      document.querySelectorAll('.segmented-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentTab = tab;
+      haptic();
+      render();
+    }
+
+    function render() {
+      const now = new Date();
+      const currentWeek = getWeekType(now);
+      const weekLabel = currentWeek === 1 ? 'Чисельник (1 тиждень)' : 'Знаменник (2 тиждень)';
+
+      if (currentTab === 'today') {
+        renderDay(0, currentWeek, 'Сьогодні', weekLabel);
+      } else if (currentTab === 'tomorrow') {
+        const tomorrow = new Date(now);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const tomWeek = getWeekType(tomorrow);
+        const tomWeekLabel = tomWeek === 1 ? 'Чисельник (1 тиждень)' : 'Знаменник (2 тиждень)';
+        renderDay(1, tomWeek, 'Завтра', tomWeekLabel);
+      } else if (currentTab === 'week1') {
+        renderFullWeek(1, '1 тиждень (Чисельник)');
+      } else if (currentTab === 'week2') {
+        renderFullWeek(2, '2 тиждень (Знаменник)');
+      } else if (currentTab === 'bells') {
+        renderBells();
+      }
+    }
+
+    function renderDay(dayOffset, weekType, label, weekLabel) {
+      const targetDate = new Date();
+      targetDate.setDate(targetDate.getDate() + dayOffset);
+      
+      const dayIdx = (targetDate.getDay() + 6) % 7; // Понеділок = 0
+      const dayName = DAYS_NAMES[dayIdx];
+      const dateStr = targetDate.toLocaleDateString('uk-UA', { day: 'numeric', month: 'long' });
+
+      document.getElementById('subtitle').innerText = `${label} • ${dayName}, ${dateStr} • ${weekLabel}`;
+
+      const pairs = (SCHEDULE[dayIdx] || [])
+        .filter(p => p.week === null || p.week === weekType)
+        .map(p => {
+          const bell = BELLS.find(b => b.pair === p.pair) || { start: "??:??", end: "??:??" };
+          return { ...p, start: bell.start, end: bell.end };
+        })
+        .sort((a, b) => a.pair - b.pair);
+
+      const container = document.getElementById('container');
+
+      if (pairs.length === 0) {
+        container.innerHTML = `
+          <div class="apple-card empty-card">
+            <div class="empty-icon">🏖️</div>
+            <div class="empty-title">Пар немає!</div>
+            <div class="empty-desc">${dayOffset === 0 ? 'Сьогодні' : 'Завтра'} занять немає, можна відпочивати.</div>
+          </div>
+        `;
+        return;
+      }
+
+      const nowMin = targetDate.getHours() * 60 + targetDate.getMinutes();
+      const isToday = (dayOffset === 0);
+
+      let html = '';
+      pairs.forEach(p => {
+        const startMin = timeToMinutes(p.start);
+        const endMin = timeToMinutes(p.end);
+        const isCurrent = isToday && (nowMin >= startMin && nowMin <= endMin);
+        const isPast = isToday && (nowMin > endMin);
+
+        let progress = 0;
+        let minLeft = 0;
+        if (isCurrent) {
+          progress = Math.min(100, Math.max(0, Math.floor(((nowMin - startMin) / (endMin - startMin)) * 100)));
+          minLeft = Math.max(0, endMin - nowMin);
+        }
+
+        html += `
+          <div class="apple-card ${isCurrent ? 'live-card' : ''} ${isPast ? 'past-card' : ''}">
+            <div class="pair-header">
+              <span class="pair-time">${p.start} – ${p.end}</span>
+              ${isCurrent ? 
+                '<span class="live-badge"><span class="pulse-dot"></span>Зараз іде</span>' : 
+                `<span class="pair-tag">Пара #${p.pair} • ${p.type}</span>`
+              }
+            </div>
+            <div class="pair-title">${p.name}</div>
+            <div class="pair-details">
+              <div class="detail-item">
+                <span class="icon-symbol">🚪</span>
+                <span>${p.room}</span>
+              </div>
+              <div class="detail-item">
+                <span class="icon-symbol">👨‍🏫</span>
+                <span>${p.teacher}</span>
+              </div>
+            </div>
+            ${isCurrent ? `
+              <div class="progress-wrapper">
+                <div class="progress-bar-bg">
+                  <div class="progress-bar-fill" style="width: ${progress}%;"></div>
+                </div>
+                <div class="progress-info">
+                  <span>Пройшло ${progress}%</span>
+                  <span>Залишилось ${minLeft} хв</span>
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function renderFullWeek(weekType, title) {
+      document.getElementById('subtitle').innerText = `Повний розклад • ${title}`;
+      const container = document.getElementById('container');
+      let html = '';
+
+      for (let day = 0; day < 6; day++) { // Понеділок - Субота
+        const pairs = (SCHEDULE[day] || [])
+          .filter(p => p.week === null || p.week === weekType)
+          .map(p => {
+            const bell = BELLS.find(b => b.pair === p.pair) || { start: "??:??", end: "??:??" };
+            return { ...p, start: bell.start, end: bell.end };
+          })
+          .sort((a, b) => a.pair - b.pair);
+
+        html += `<div class="day-section-title">📅 ${DAYS_NAMES[day]}</div>`;
+
+        if (pairs.length === 0) {
+          html += `
+            <div class="apple-card" style="padding: 14px 18px; color: var(--text-secondary); font-size: 14px;">
+              Занять немає
+            </div>
+          `;
+          continue;
+        }
+
+        pairs.forEach(p => {
+          html += `
+            <div class="apple-card" style="padding: 14px 18px; margin-bottom: 8px;">
+              <div class="pair-header" style="margin-bottom: 4px;">
+                <span class="pair-time">${p.start} – ${p.end}</span>
+                <span class="pair-tag">#${p.pair} • ${p.type}</span>
+              </div>
+              <div style="font-weight: 700; font-size: 16px; margin-bottom: 6px;">${p.name}</div>
+              <div style="font-size: 13px; color: var(--text-secondary); display: flex; gap: 14px;">
+                <span>🚪 ${p.room}</span>
+                <span>👨‍🏫 ${p.teacher}</span>
+              </div>
+            </div>
+          `;
+        });
+      }
+
+      container.innerHTML = html;
+    }
+
+    function renderBells() {
+      document.getElementById('subtitle').innerText = 'Розклад дзвінків • ВСП ФК КрНУ';
+      let items = BELLS.map(b => `
+        <div class="bell-item">
+          <div>
+            <div style="font-weight: 700; font-size: 15px;">#${b.pair} пара</div>
+            <div style="font-size: 12px; color: var(--text-secondary);">Перерва: ${b.breakTime}</div>
+          </div>
+          <div style="font-weight: 700; color: var(--accent-blue); font-size: 15px;">${b.start} – ${b.end}</div>
+        </div>
+      `).join('');
+
+      document.getElementById('container').innerHTML = `
+        <div class="apple-card">
+          <div style="font-weight: 800; font-size: 17px; margin-bottom: 10px;">Сітка дзвінків</div>
+          ${items}
+        </div>
+      `;
+    }
+
+    // Перший запуск
+    render();
+
+    // Автоматичне оновлення кожні 15 секунд для плавності таймера та прогрес-бару
+    setInterval(() => {
+      if (currentTab === 'today') {
+        render();
+      }
+    }, 15000);
+  </script>
+</body>
+</html>
