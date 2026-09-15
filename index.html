@@ -1,44 +1,46 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="uk" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>Розклад пар • КМ 24-9-1</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    :root {
+    /* Базові змінні для світлої теми */
+    :root, body, body.theme-light {
       --bg: #F2F2F7;
       --bg-secondary: #FFFFFF;
-      --card-bg: rgba(255, 255, 255, 0.84);
+      --card-bg: rgba(255, 255, 255, 0.88);
       --card-solid: #FFFFFF;
-      --card-border: rgba(0, 0, 0, 0.06);
+      --card-border: rgba(0, 0, 0, 0.08);
       --text-primary: #000000;
-      --text-secondary: #8E8E93;
-      --text-tertiary: #C7C7CC;
+      --text-secondary: #6E6E73;
+      --text-tertiary: #AEAEB2;
       --accent-blue: #007AFF;
       --accent-green: #34C759;
       --accent-orange: #FF9500;
       --accent-purple: #AF52DE;
       --accent-red: #FF3B30;
-      --segmented-bg: rgba(118, 118, 128, 0.14);
+      --segmented-bg: rgba(118, 118, 128, 0.15);
       --blur: blur(28px);
-      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
-      --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.07);
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.08);
       --font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", sans-serif;
     }
 
-    [data-theme="dark"] {
-      --bg: #000000;
-      --bg-secondary: #1C1C1E;
-      --card-bg: rgba(28, 28, 30, 0.86);
-      --card-solid: #1C1C1E;
-      --card-border: rgba(255, 255, 255, 0.09);
-      --text-primary: #FFFFFF;
-      --text-secondary: #98989D;
-      --text-tertiary: #48484A;
-      --segmented-bg: rgba(118, 118, 128, 0.28);
-      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-      --shadow-md: 0 6px 24px rgba(0, 0, 0, 0.45);
+    /* Змінні для темної теми */
+    body.theme-dark, [data-theme="dark"] {
+      --bg: #000000 !important;
+      --bg-secondary: #1C1C1E !important;
+      --card-bg: rgba(28, 28, 30, 0.88) !important;
+      --card-solid: #1C1C1E !important;
+      --card-border: rgba(255, 255, 255, 0.12) !important;
+      --text-primary: #FFFFFF !important;
+      --text-secondary: #98989D !important;
+      --text-tertiary: #48484A !important;
+      --segmented-bg: rgba(118, 118, 128, 0.3) !important;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+      --shadow-md: 0 6px 24px rgba(0, 0, 0, 0.55) !important;
     }
 
     * {
@@ -50,16 +52,16 @@
     }
 
     body {
-      background-color: var(--bg);
-      color: var(--text-primary);
+      background-color: var(--bg) !important;
+      color: var(--text-primary) !important;
       padding: 16px;
       padding-top: calc(env(safe-area-inset-top, 16px) + 10px);
       padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 40px);
       min-height: 100vh;
-      transition: background-color 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), color 0.3s ease;
+      transition: background-color 0.25s ease, color 0.25s ease;
     }
 
-    /* Top Bar with Apple Theme Switcher */
+    /* Верхня панель з тегом коледжу та перемикачем тем */
     .top-bar {
       display: flex;
       justify-content: space-between;
@@ -72,15 +74,14 @@
       gap: 6px;
       font-size: 12px;
       font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.4px;
       color: var(--accent-blue);
-      background: rgba(0, 122, 255, 0.1);
-      padding: 5px 10px;
+      background: rgba(0, 122, 255, 0.12);
+      padding: 6px 12px;
       border-radius: 14px;
     }
-    
-    /* Theme Toggle Capsule */
+
+    /* Перемикач тем у стилі Apple Control Center */
     .theme-capsule {
       display: flex;
       background: var(--segmented-bg);
@@ -88,18 +89,22 @@
       -webkit-backdrop-filter: var(--blur);
       border-radius: 20px;
       padding: 3px;
-      gap: 2px;
+      gap: 3px;
       border: 1px solid var(--card-border);
     }
     .theme-btn {
       border: none;
       background: transparent;
-      padding: 4px 9px;
+      padding: 6px 10px;
       font-size: 13px;
+      font-weight: 600;
       border-radius: 16px;
       cursor: pointer;
       color: var(--text-secondary);
       transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .theme-btn.active {
       background: var(--card-solid);
@@ -107,7 +112,7 @@
       box-shadow: var(--shadow-sm);
     }
 
-    /* Apple Main Header */
+    /* Заголовки */
     .group-title {
       font-size: 32px;
       font-weight: 800;
@@ -122,7 +127,7 @@
       margin-bottom: 16px;
     }
 
-    /* iOS Interactive Summary Widget (Live / Widget Card) */
+    /* Інтерактивний Apple Live-віджет */
     .summary-widget {
       background: var(--card-bg);
       backdrop-filter: var(--blur);
@@ -133,7 +138,6 @@
       margin-bottom: 18px;
       box-shadow: var(--shadow-md);
       position: relative;
-      overflow: hidden;
     }
     .widget-row {
       display: flex;
@@ -142,7 +146,7 @@
     }
     .widget-stat-group {
       display: flex;
-      gap: 20px;
+      gap: 18px;
     }
     .stat-item {
       display: flex;
@@ -156,7 +160,7 @@
       color: var(--text-secondary);
     }
     .stat-value {
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 700;
       margin-top: 2px;
     }
@@ -164,11 +168,11 @@
       display: inline-flex;
       align-items: center;
       gap: 7px;
-      background: rgba(52, 199, 89, 0.15);
+      background: rgba(52, 199, 89, 0.16);
       color: var(--accent-green);
       font-size: 12px;
       font-weight: 700;
-      padding: 5px 12px;
+      padding: 6px 12px;
       border-radius: 20px;
     }
     .pulse-dot {
@@ -184,7 +188,6 @@
       100% { transform: scale(0.85); opacity: 0.7; }
     }
 
-    /* Live Countdown Banner in Widget */
     .countdown-banner {
       margin-top: 12px;
       padding-top: 12px;
@@ -201,14 +204,14 @@
       font-size: 15px;
     }
 
-    /* Apple Spotlight Search Bar */
+    /* Пошуковий рядок Spotlight */
     .search-wrapper {
       position: relative;
       margin-bottom: 16px;
     }
     .search-input {
       width: 100%;
-      padding: 10px 14px 10px 38px;
+      padding: 11px 14px 11px 38px;
       background: var(--segmented-bg);
       border: 1px solid var(--card-border);
       border-radius: 12px;
@@ -240,6 +243,7 @@
       color: var(--text-secondary);
       cursor: pointer;
       display: none;
+      padding: 4px;
     }
 
     /* iOS Segmented Control */
@@ -262,11 +266,10 @@
       min-width: 420px;
       backdrop-filter: var(--blur);
       -webkit-backdrop-filter: var(--blur);
-      box-shadow: inset 0 0 1px rgba(0,0,0,0.08);
     }
     .segmented-btn {
       flex: 1;
-      padding: 8px 12px;
+      padding: 9px 12px;
       font-size: 13px;
       font-weight: 600;
       border: none;
@@ -276,7 +279,7 @@
       cursor: pointer;
       white-space: nowrap;
       text-align: center;
-      transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+      transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
     .segmented-btn.active {
       background: var(--card-solid);
@@ -284,7 +287,7 @@
       color: var(--text-primary);
     }
 
-    /* Interactive Apple Cards */
+    /* Інтерактивні картки пар */
     .apple-card {
       background: var(--card-bg);
       backdrop-filter: var(--blur);
@@ -296,7 +299,7 @@
       box-shadow: var(--shadow-sm);
       position: relative;
       cursor: pointer;
-      transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+      transition: transform 0.16s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     }
     .apple-card:hover {
       transform: translateY(-2px);
@@ -307,10 +310,10 @@
     }
     .apple-card.live-card {
       border: 1.5px solid rgba(52, 199, 89, 0.65);
-      box-shadow: 0 8px 32px rgba(52, 199, 89, 0.18);
+      box-shadow: 0 8px 30px rgba(52, 199, 89, 0.18);
     }
     .apple-card.past-card {
-      opacity: 0.6;
+      opacity: 0.65;
     }
 
     .pair-header {
@@ -320,7 +323,7 @@
       margin-bottom: 8px;
     }
     .pair-time {
-      font-size: 14px;
+      font-size: 14.5px;
       font-weight: 700;
       color: var(--accent-blue);
       letter-spacing: -0.2px;
@@ -329,7 +332,7 @@
       font-size: 11px;
       color: var(--text-secondary);
       font-weight: 700;
-      background: rgba(118, 118, 128, 0.12);
+      background: rgba(118, 118, 128, 0.14);
       padding: 3px 8px;
       border-radius: 8px;
       text-transform: uppercase;
@@ -364,21 +367,20 @@
       font-size: 12px;
     }
 
-    /* Has Memo Badge */
     .memo-indicator {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      font-size: 11px;
+      gap: 5px;
+      font-size: 11.5px;
       font-weight: 600;
       color: var(--accent-orange);
       background: rgba(255, 149, 0, 0.14);
-      padding: 3px 8px;
-      border-radius: 8px;
-      margin-top: 8px;
+      padding: 4px 10px;
+      border-radius: 9px;
+      margin-top: 10px;
     }
 
-    /* Live Progress Bar */
+    /* Прогрес-бар поточної пари */
     .progress-wrapper {
       margin-top: 14px;
       padding-top: 12px;
@@ -394,7 +396,7 @@
       background: linear-gradient(90deg, #34C759, #30D158);
       height: 100%;
       border-radius: 8px;
-      transition: width 0.6s ease;
+      transition: width 0.5s ease;
     }
     .progress-info {
       display: flex;
@@ -405,11 +407,11 @@
       margin-top: 6px;
     }
 
-    /* Apple Modal Bottom Sheet */
+    /* Apple Bottom Sheet (Модалка деталей і нотаток) */
     .sheet-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.45);
+      background: rgba(0, 0, 0, 0.5);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       z-index: 999;
@@ -507,10 +509,6 @@
       font-weight: 600;
       cursor: pointer;
       border: none;
-      transition: transform 0.15s ease;
-    }
-    .sheet-btn:active {
-      transform: scale(0.98);
     }
     .sheet-btn-primary {
       background: var(--accent-blue);
@@ -521,7 +519,7 @@
       color: var(--text-primary);
     }
 
-    /* Toast notification */
+    /* Toast сповіщення */
     .toast {
       position: fixed;
       top: calc(env(safe-area-inset-top, 16px) + 20px);
@@ -545,7 +543,6 @@
       opacity: 1;
     }
 
-    /* Day section title */
     .day-section-title {
       font-size: 19px;
       font-weight: 800;
@@ -556,7 +553,6 @@
       gap: 8px;
     }
 
-    /* Bells table */
     .bell-item {
       display: flex;
       justify-content: space-between;
@@ -568,14 +564,13 @@
       border-bottom: none;
     }
 
-    /* Empty state */
     .empty-card {
       text-align: center;
-      padding: 50px 20px;
+      padding: 40px 20px;
     }
     .empty-icon {
-      font-size: 42px;
-      margin-bottom: 12px;
+      font-size: 40px;
+      margin-bottom: 10px;
     }
     .empty-title {
       font-size: 18px;
@@ -588,18 +583,19 @@
     }
   </style>
 </head>
-<body>
-  <div class="toast" id="toast">Повідомлення скопійовано</div>
+<body class="theme-light">
+  <div class="toast" id="toast">Повідомлення</div>
 
-  <!-- Верхня панель з тегами та перемикачем теми Apple -->
+  <!-- Верхня панель -->
   <div class="top-bar">
     <div class="college-tag">
       <span>🏛️</span> ВСП ФК КрНУ
     </div>
+    <!-- Перемикач тем Apple -->
     <div class="theme-capsule">
-      <button class="theme-btn" id="theme-light" onclick="setTheme('light')">☀️</button>
+      <button class="theme-btn active" id="theme-light" onclick="setTheme('light')">☀️ Світла</button>
       <button class="theme-btn" id="theme-auto" onclick="setTheme('auto')">Auto</button>
-      <button class="theme-btn" id="theme-dark" onclick="setTheme('dark')">🌙</button>
+      <button class="theme-btn" id="theme-dark" onclick="setTheme('dark')">🌙 Темна</button>
     </div>
   </div>
 
@@ -607,7 +603,7 @@
   <div class="group-title">КМ 24-9-1</div>
   <div class="date-subtitle" id="subtitle">Завантаження...</div>
 
-  <!-- Інтерактивний віджет зведення (Apple Widget) -->
+  <!-- Apple Live Widget -->
   <div class="summary-widget">
     <div class="widget-row">
       <div class="widget-stat-group">
@@ -621,23 +617,23 @@
         </div>
       </div>
       <div id="live-status-pill">
-        <span class="live-indicator"><span class="pulse-dot"></span>Йде пара</span>
+        <span class="live-indicator"><span class="pulse-dot"></span>Розклад активний</span>
       </div>
     </div>
-    <div class="countdown-banner" id="countdown-banner">
-      <span id="countdown-label">До кінця пари:</span>
+    <div class="countdown-banner" id="countdown-banner" style="display: flex;">
+      <span id="countdown-label">Статус:</span>
       <span class="countdown-timer" id="countdown-timer">00:00</span>
     </div>
   </div>
 
-  <!-- Пошуковий рядок (Spotlight) -->
+  <!-- Пошук Spotlight -->
   <div class="search-wrapper">
     <span class="search-icon">🔍</span>
-    <input type="text" class="search-input" id="search-input" placeholder="Пошук предмету або викладача..." oninput="handleSearch()" />
+    <input type="text" class="search-input" id="search-input" placeholder="Пошук за назвою, викладачем, аудиторією..." oninput="handleSearch()" />
     <span class="clear-search" id="clear-search" onclick="clearSearch()">✕</span>
   </div>
 
-  <!-- Apple iOS Segmented Control -->
+  <!-- iOS Segmented Control -->
   <div class="segmented-scroll">
     <div class="segmented-control">
       <button class="segmented-btn active" onclick="switchTab('today', this)">Сьогодні</button>
@@ -648,17 +644,17 @@
     </div>
   </div>
 
-  <!-- Контейнер для списку занять -->
+  <!-- Список пар -->
   <div id="container"></div>
 
-  <!-- Apple iOS Bottom Sheet (Модальне вікно для нотаток і деталей пари) -->
+  <!-- Apple Bottom Sheet для нотаток і копіювання -->
   <div class="sheet-overlay" id="sheet-overlay" onclick="closeSheet()"></div>
   <div class="bottom-sheet" id="bottom-sheet">
     <div class="sheet-handle"></div>
     <div class="sheet-header">
       <div>
-        <div class="pair-tag" id="sheet-pair-tag" style="margin-bottom: 6px;">1 пара</div>
-        <div class="sheet-title" id="sheet-title">Назва предмету</div>
+        <div class="pair-tag" id="sheet-pair-tag" style="margin-bottom: 6px;">Пара #1</div>
+        <div class="sheet-title" id="sheet-title">Предмет</div>
       </div>
       <button class="sheet-close-btn" onclick="closeSheet()">✕</button>
     </div>
@@ -666,11 +662,11 @@
     <div class="pair-details" style="font-size: 14px; margin-bottom: 14px;">
       <div class="detail-item">
         <span class="icon-symbol">⏰</span>
-        <span id="sheet-time" style="font-weight: 600; color: var(--accent-blue);">08:30 – 10:00</span>
+        <span id="sheet-time" style="font-weight: 700; color: var(--accent-blue);">08:30 – 10:00</span>
       </div>
       <div class="detail-item">
         <span class="icon-symbol">🚪</span>
-        <span id="sheet-room">Аудиторія 301</span>
+        <span id="sheet-room">Аудиторія</span>
       </div>
       <div class="detail-item">
         <span class="icon-symbol">👨‍🏫</span>
@@ -678,8 +674,8 @@
       </div>
     </div>
 
-    <div class="sheet-memo-title">📝 Мої нотатки та завдання (зберігаються в пам'яті)</div>
-    <textarea class="sheet-textarea" id="sheet-memo" placeholder="Наприклад: здати лабу 2, повторити конспект, контрольна робота..."></textarea>
+    <div class="sheet-memo-title">📝 Мої нотатки та завдання</div>
+    <textarea class="sheet-textarea" id="sheet-memo" placeholder="Наприклад: підготувати звіт, здати лабораторну, тест..."></textarea>
 
     <div class="sheet-actions">
       <button class="sheet-btn sheet-btn-secondary" onclick="copyPairInfo()">📋 Скопіювати</button>
@@ -742,17 +738,30 @@
       6: [] // Неділя
     };
 
-    // --- TELEGRAM WEBAPP & HAPTIC FEEDBACK ---
+    // --- БЕЗПЕЧНА РОБОТА З ПАМ'ЯТТЮ ТА HAPTICS ---
+    function safeGet(key, def = null) {
+      try { return localStorage.getItem(key) || def; } catch (e) { return def; }
+    }
+    function safeSet(key, val) {
+      try { localStorage.setItem(key, val); } catch (e) {}
+    }
+    function safeRemove(key) {
+      try { localStorage.removeItem(key); } catch (e) {}
+    }
+
     const tg = window.Telegram?.WebApp;
     if (tg) {
-      tg.expand();
-      tg.ready();
+      try { tg.expand(); tg.ready(); } catch(e) {}
     }
 
     function haptic(style = 'light') {
-      if (tg?.HapticFeedback) {
-        tg.HapticFeedback.impactOccurred(style);
-      }
+      try {
+        if (tg?.HapticFeedback) {
+          if (style === 'selection') tg.HapticFeedback.selectionChanged();
+          else if (style === 'success' || style === 'error' || style === 'warning') tg.HapticFeedback.notificationOccurred(style);
+          else tg.HapticFeedback.impactOccurred(style);
+        }
+      } catch (e) {}
     }
 
     function showToast(msg) {
@@ -762,26 +771,38 @@
       setTimeout(() => t.classList.remove('active'), 2200);
     }
 
-    // --- ТЕМИ ОФОРМЛЕННЯ (APPLE THEMES) ---
+    // --- ПЕРЕМИКАННЯ ТЕМ (APPLE CONTROL CENTER) ---
     function setTheme(mode) {
       haptic('selection');
-      localStorage.setItem('km_theme', mode);
+      safeSet('km_theme', mode);
+
       document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
       const activeBtn = document.getElementById(`theme-${mode}`);
       if (activeBtn) activeBtn.classList.add('active');
 
+      let isDark = false;
       if (mode === 'auto') {
-        const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+        if (tg?.colorScheme) {
+          isDark = (tg.colorScheme === 'dark');
+        } else if (window.matchMedia) {
+          isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        }
       } else {
-        document.documentElement.setAttribute('data-theme', mode);
+        isDark = (mode === 'dark');
+      }
+
+      if (isDark) {
+        document.body.classList.remove('theme-light');
+        document.body.classList.add('theme-dark');
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else {
+        document.body.classList.remove('theme-dark');
+        document.body.classList.add('theme-light');
+        document.documentElement.setAttribute('data-theme', 'light');
       }
     }
 
-    const savedTheme = localStorage.getItem('km_theme') || 'auto';
-    setTheme(savedTheme);
-
-    // --- ДОПОМІЖНІ ФУНКЦІЇ ЧАСУ ---
+    // --- РОЗРАХУНОК ТИЖНЯ ТА ДНЯ ---
     function getWeekNumber(d) {
       d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
       d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
@@ -792,6 +813,11 @@
     function getWeekType(date = new Date()) {
       const weekNum = getWeekNumber(date);
       return (weekNum % 2 !== 0) ? 1 : 2;
+    }
+
+    function getDayIndex(date) {
+      const jsDay = date.getDay(); // 0 = Неділя, 1 = Понеділок...
+      return jsDay === 0 ? 6 : jsDay - 1; // 0 = Понеділок, 6 = Неділя
     }
 
     function timeToMinutes(timeStr) {
@@ -824,40 +850,43 @@
       render();
     }
 
-    // --- ГОЛОВНА ФУНКЦІЯ ВІДОБРАЖЕННЯ ---
+    // --- ГОЛОВНИЙ РЕНДЕР ---
     function render() {
-      const now = new Date();
-      const currentWeek = getWeekType(now);
-      const weekLabel = currentWeek === 1 ? 'Чисельник (1 тиждень)' : 'Знаменник (2 тиждень)';
+      try {
+        const now = new Date();
+        const currentWeek = getWeekType(now);
+        const weekLabel = currentWeek === 1 ? 'Чисельник (1 тиждень)' : 'Знаменник (2 тиждень)';
 
-      // Оновлення віджета
-      updateSummaryWidget(now, currentWeek);
+        updateSummaryWidget(now, currentWeek);
 
-      if (currentTab === 'today') {
-        renderDay(0, currentWeek, 'Сьогодні', weekLabel);
-      } else if (currentTab === 'tomorrow') {
-        const tomorrow = new Date(now);
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        const tomWeek = getWeekType(tomorrow);
-        const tomWeekLabel = tomWeek === 1 ? 'Чисельник (1 тиждень)' : 'Знаменник (2 тиждень)';
-        renderDay(1, tomWeek, 'Завтра', tomWeekLabel);
-      } else if (currentTab === 'week1') {
-        renderFullWeek(1, '1 тиждень (Чисельник)');
-      } else if (currentTab === 'week2') {
-        renderFullWeek(2, '2 тиждень (Знаменник)');
-      } else if (currentTab === 'bells') {
-        renderBells();
+        if (currentTab === 'today') {
+          renderDay(0, currentWeek, 'Сьогодні', weekLabel);
+        } else if (currentTab === 'tomorrow') {
+          const tomorrow = new Date(now);
+          tomorrow.setDate(tomorrow.getDate() + 1);
+          const tomWeek = getWeekType(tomorrow);
+          const tomWeekLabel = tomWeek === 1 ? 'Чисельник (1 тиждень)' : 'Знаменник (2 тиждень)';
+          renderDay(1, tomWeek, 'Завтра', tomWeekLabel);
+        } else if (currentTab === 'week1') {
+          renderFullWeek(1, '1 тиждень (Чисельник)');
+        } else if (currentTab === 'week2') {
+          renderFullWeek(2, '2 тиждень (Знаменник)');
+        } else if (currentTab === 'bells') {
+          renderBells();
+        }
+      } catch (err) {
+        console.error('Render error:', err);
       }
     }
 
     function updateSummaryWidget(now, currentWeek) {
       document.getElementById('current-week-stat').innerText = `${currentWeek} тижд. (${currentWeek === 1 ? 'Чис.' : 'Знам.'})`;
 
-      const dayIdx = (now.getDay() + 6) % 7;
+      const dayIdx = getDayIndex(now);
       const todayPairs = (SCHEDULE[dayIdx] || []).filter(p => p.week === null || p.week === currentWeek);
       document.getElementById('today-pairs-count').innerText = todayPairs.length;
 
-      const nowMin = now.getHours() * 60 + now.minute || (now.getHours() * 60 + now.getMinutes());
+      const nowMin = now.getHours() * 60 + now.getMinutes();
       const nowSec = now.getSeconds();
 
       let activePair = null;
@@ -890,7 +919,7 @@
         const s = Math.max(0, totalSecLeft % 60);
         timer.innerText = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
       } else if (nextPair) {
-        pill.innerHTML = `<span style="font-size:12px; font-weight:700; color:var(--accent-orange); background:rgba(255,149,0,0.15); padding:5px 12px; border-radius:20px;">Перерва</span>`;
+        pill.innerHTML = `<span style="font-size:12px; font-weight:700; color:var(--accent-orange); background:rgba(255,149,0,0.16); padding:5px 12px; border-radius:20px;">Перерва</span>`;
         banner.style.display = 'flex';
         label.innerText = `До початку #${nextPair.pair} пари:`;
         const totalSecLeft = (nextPair.startMin * 60) - (now.getHours() * 3600 + now.getMinutes() * 60 + nowSec);
@@ -899,14 +928,16 @@
         timer.innerText = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
       } else {
         pill.innerHTML = `<span style="font-size:12px; font-weight:700; color:var(--text-secondary); background:var(--segmented-bg); padding:5px 12px; border-radius:20px;">Пар немає</span>`;
-        banner.style.display = 'none';
+        banner.style.display = 'flex';
+        label.innerText = `Навчальний день:`;
+        timer.innerText = `Завершено ✨`;
       }
     }
 
     function renderDay(dayOffset, weekType, label, weekLabel) {
       const targetDate = new Date();
       targetDate.setDate(targetDate.getDate() + dayOffset);
-      const dayIdx = (targetDate.getDay() + 6) % 7;
+      const dayIdx = getDayIndex(targetDate);
       const dayName = DAYS_NAMES[dayIdx];
       const dateStr = targetDate.toLocaleDateString('uk-UA', { day: 'numeric', month: 'long' });
 
@@ -926,24 +957,44 @@
 
       const container = document.getElementById('container');
 
+      // Якщо на сьогодні пар немає (вихідний) — показуємо найближчий робочий день (Понеділок)
       if (pairs.length === 0) {
+        let altHtml = '';
+        if (!searchQuery && dayOffset === 0) {
+          // Показуємо пари понеділка
+          const monPairs = (SCHEDULE[0] || []).filter(p => p.week === null || p.week === weekType);
+          altHtml = `
+            <div class="day-section-title" style="margin-top: 24px;">📅 Розклад на Понеділок:</div>
+            ${renderPairsListHtml(monPairs, 0, false)}
+          `;
+        }
+
         container.innerHTML = `
           <div class="apple-card empty-card">
             <div class="empty-icon">${searchQuery ? '🔍' : '🏖️'}</div>
-            <div class="empty-title">${searchQuery ? 'Нічого не знайдено' : 'Пар немає!'}</div>
-            <div class="empty-desc">${searchQuery ? 'Спробуйте інший пошуковий запит' : (dayOffset === 0 ? 'Сьогодні занять немає, можна відпочивати.' : 'Завтра занять немає.')}</div>
+            <div class="empty-title">${searchQuery ? 'Нічого не знайдено' : 'На цей день пар немає!'}</div>
+            <div class="empty-desc">${searchQuery ? 'Спробуйте інший пошуковий запит' : (dayOffset === 0 ? 'Сьогодні вихідний, можна спокійно відпочивати.' : 'Завтра занять немає.')}</div>
           </div>
+          ${altHtml}
         `;
         return;
       }
 
-      const nowMin = targetDate.getHours() * 60 + targetDate.getMinutes();
-      const isToday = (dayOffset === 0);
+      container.innerHTML = renderPairsListHtml(pairs, dayIdx, dayOffset === 0);
+    }
+
+    function renderPairsListHtml(pairs, dayIdx, isToday) {
+      const now = new Date();
+      const nowMin = now.getHours() * 60 + now.getMinutes();
 
       let html = '';
       pairs.forEach(p => {
-        const startMin = timeToMinutes(p.start);
-        const endMin = timeToMinutes(p.end);
+        const bell = BELLS.find(b => b.pair === p.pair) || { start: p.start || "??:??", end: p.end || "??:??" };
+        const start = bell.start;
+        const end = bell.end;
+
+        const startMin = timeToMinutes(start);
+        const endMin = timeToMinutes(end);
         const isCurrent = isToday && (nowMin >= startMin && nowMin <= endMin);
         const isPast = isToday && (nowMin > endMin);
 
@@ -955,32 +1006,32 @@
         }
 
         const memoKey = `memo_${p.name}_${p.pair}`;
-        const savedMemo = localStorage.getItem(memoKey);
+        const savedMemo = safeGet(memoKey);
 
         html += `
-          <div class="apple-card ${isCurrent ? 'live-card' : ''} ${isPast ? 'past-card' : ''}" onclick="openSheet(${p.pair}, '${escapeHtml(p.name)}', '${p.start}', '${p.end}', '${escapeHtml(p.room)}', '${escapeHtml(p.teacher)}', '${escapeHtml(p.type)}')">
+          <div class="apple-card ${isCurrent ? 'live-card' : ''} ${isPast ? 'past-card' : ''}" onclick="openPairModal(${dayIdx}, ${p.pair})">
             <div class="pair-header">
-              <span class="pair-time">${p.start} – ${p.end}</span>
+              <span class="pair-time">${start} – ${end}</span>
               ${isCurrent ? 
                 '<span class="live-badge"><span class="pulse-dot"></span>Зараз іде</span>' : 
                 `<span class="pair-tag">Пара #${p.pair} • ${p.type}</span>`
               }
             </div>
-            <div class="pair-title">${p.name}</div>
+            <div class="pair-title">${escapeHtml(p.name)}</div>
             <div class="pair-details">
               <div class="detail-item">
                 <span class="icon-symbol">🚪</span>
-                <span>${p.room}</span>
+                <span>${escapeHtml(p.room)}</span>
               </div>
               <div class="detail-item">
                 <span class="icon-symbol">👨‍🏫</span>
-                <span>${p.teacher}</span>
+                <span>${escapeHtml(p.teacher)}</span>
               </div>
             </div>
 
             ${savedMemo ? `
               <div class="memo-indicator">
-                <span>📝</span> <span>${escapeHtml(savedMemo).substring(0, 32)}${savedMemo.length > 32 ? '...' : ''}</span>
+                <span>📝</span> <span>${escapeHtml(savedMemo).substring(0, 35)}</span>
               </div>
             ` : ''}
 
@@ -999,7 +1050,7 @@
         `;
       });
 
-      container.innerHTML = html;
+      return html;
     }
 
     function renderFullWeek(weekType, title) {
@@ -1028,29 +1079,7 @@
           continue;
         }
 
-        pairs.forEach(p => {
-          const memoKey = `memo_${p.name}_${p.pair}`;
-          const savedMemo = localStorage.getItem(memoKey);
-
-          html += `
-            <div class="apple-card" style="padding: 15px 18px; margin-bottom: 10px;" onclick="openSheet(${p.pair}, '${escapeHtml(p.name)}', '${p.start}', '${p.end}', '${escapeHtml(p.room)}', '${escapeHtml(p.teacher)}', '${escapeHtml(p.type)}')">
-              <div class="pair-header" style="margin-bottom: 4px;">
-                <span class="pair-time">${p.start} – ${p.end}</span>
-                <span class="pair-tag">#${p.pair} • ${p.type}</span>
-              </div>
-              <div style="font-weight: 700; font-size: 16px; margin-bottom: 6px;">${p.name}</div>
-              <div style="font-size: 13px; color: var(--text-secondary); display: flex; gap: 14px;">
-                <span>🚪 ${p.room}</span>
-                <span>👨‍🏫 ${p.teacher}</span>
-              </div>
-              ${savedMemo ? `
-                <div class="memo-indicator" style="margin-top: 6px;">
-                  <span>📝</span> <span>${escapeHtml(savedMemo).substring(0, 32)}</span>
-                </div>
-              ` : ''}
-            </div>
-          `;
-        });
+        html += renderPairsListHtml(pairs, day, false);
       }
 
       if (!html) {
@@ -1086,19 +1115,24 @@
       `;
     }
 
-    // --- МОДАЛЬНЕ ВІКНО ДЕТАЛЕЙ ПАРИ ТА НОТАТОК (BOTTOM SHEET) ---
-    function openSheet(pairNum, name, start, end, room, teacher, type) {
+    // --- ВІДКРИТТЯ МОДАЛКИ ПАРИ ЧЕРЕЗ ІНДЕКС (БЕЗ ПОМИЛОК ЛАПОК В ONCLICK) ---
+    function openPairModal(dayIdx, pairNum) {
       haptic('medium');
-      selectedPairForModal = { pairNum, name, start, end, room, teacher, type };
+      const dayPairs = SCHEDULE[dayIdx] || [];
+      const p = dayPairs.find(item => item.pair === pairNum);
+      if (!p) return;
 
-      document.getElementById('sheet-pair-tag').innerText = `Пара #${pairNum} • ${type}`;
-      document.getElementById('sheet-title').innerText = name;
-      document.getElementById('sheet-time').innerText = `${start} – ${end}`;
-      document.getElementById('sheet-room').innerText = room;
-      document.getElementById('sheet-teacher').innerText = teacher;
+      const bell = BELLS.find(b => b.pair === p.pair) || { start: "08:30", end: "10:00" };
+      selectedPairForModal = { ...p, start: bell.start, end: bell.end };
 
-      const memoKey = `memo_${name}_${pairNum}`;
-      document.getElementById('sheet-memo').value = localStorage.getItem(memoKey) || '';
+      document.getElementById('sheet-pair-tag').innerText = `Пара #${p.pair} • ${p.type}`;
+      document.getElementById('sheet-title').innerText = p.name;
+      document.getElementById('sheet-time').innerText = `${bell.start} – ${bell.end}`;
+      document.getElementById('sheet-room').innerText = p.room;
+      document.getElementById('sheet-teacher').innerText = p.teacher;
+
+      const memoKey = `memo_${p.name}_${p.pair}`;
+      document.getElementById('sheet-memo').value = safeGet(memoKey, '');
 
       document.getElementById('sheet-overlay').classList.add('active');
       document.getElementById('bottom-sheet').classList.add('active');
@@ -1113,12 +1147,12 @@
     function saveMemo() {
       if (!selectedPairForModal) return;
       haptic('success');
-      const memoKey = `memo_${selectedPairForModal.name}_${selectedPairForModal.pairNum}`;
+      const memoKey = `memo_${selectedPairForModal.name}_${selectedPairForModal.pair}`;
       const val = document.getElementById('sheet-memo').value.trim();
       if (val) {
-        localStorage.setItem(memoKey, val);
+        safeSet(memoKey, val);
       } else {
-        localStorage.removeItem(memoKey);
+        safeRemove(memoKey);
       }
       showToast('Нотатку збережено! 💾');
       closeSheet();
@@ -1128,20 +1162,28 @@
     function copyPairInfo() {
       if (!selectedPairForModal) return;
       haptic('light');
-      const text = `${selectedPairForModal.name}\nЧас: ${selectedPairForModal.start}-${selectedPairForModal.end}\nАудиторія: ${selectedPairForModal.room}\nВикладач: ${selectedPairForModal.teacher}`;
-      navigator.clipboard?.writeText(text);
-      showToast('Інформацію скопійовано! 📋');
+      const text = `${selectedPairForModal.name}\nЧас: ${selectedPairForModal.start} - ${selectedPairForModal.end}\nАудиторія: ${selectedPairForModal.room}\nВикладач: ${selectedPairForModal.teacher}`;
+      try {
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(text);
+        }
+      } catch(e) {}
+      showToast('Дані скопійовано! 📋');
     }
 
     function escapeHtml(str) {
       if (!str) return '';
-      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
-    // Перший запуск
+    // Ініціалізація теми
+    const savedTheme = safeGet('km_theme', 'auto');
+    setTheme(savedTheme);
+
+    // Перший запуск рендеру
     render();
 
-    // Оновлення таймера відліку кожну 1 секунду для живого годинника
+    // Оновлення таймера щосекунди
     setInterval(() => {
       const now = new Date();
       const currentWeek = getWeekType(now);
